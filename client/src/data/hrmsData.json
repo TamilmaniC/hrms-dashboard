@@ -1,0 +1,554 @@
+{
+  "department": [
+    {
+      "id": 1,
+      "name": "Maintenance",
+      "code": "IT101",
+      "description": "Maintenance the Office",
+      "branch": "Vyoobam branch 1",
+      "hod": "Harish",
+      "reporting manager": "Gokul",
+      "total employee": "8",
+      "budget allocation": "50,000",
+      "created date": "17-03-2025",
+      "status": "Active"
+    },
+    {
+      "id": 2,
+      "name": "Human Resources",
+      "code": "IT102",
+      "description": "HR of the Vyoobam Tech",
+      "branch": "Vyoobam branch 1",
+      "hod": "Tamilmani",
+      "reporting manager": "Gokul",
+      "total employee": "3",
+      "budget allocation": "90,000",
+      "created date": "17-03-2025",
+      "status": "Active"
+    }
+  ],
+
+
+  "employee": [
+    {
+      "id": 1,
+      "name": "Gokul",
+      "status": "FTE",
+      "age": "22",
+      "band": "B",
+      "gender": "Male",
+      "location": "Vyoobam Office",
+      "position": "Full Stack Developer Intern",
+      "tenure": "2"
+    },
+    {
+      "id": 2,
+      "name": "Keerthana",
+      "status": "FTE",
+      "age": "22",
+      "band": "C",
+      "gender": "Female",
+      "location": "Vyoobam Office",
+      "position": "Full Stack Developer Intern",
+      "tenure": "2"
+    },
+    {
+      "id": 3,
+      "name": "Manisha",
+      "status": "FTE",
+      "age": "21",
+      "band": "B",
+      "gender": "Female",
+      "location": "Vyoobam Office",
+      "position": "Full Stack Developer Intern",
+      "tenure": "2"
+    },
+    {
+      "id": 4,
+      "name": "Kalaivani",
+      "status": "FTE",
+      "age": "20",
+      "band": "C",
+      "gender": "Female",
+      "location": "Vyoobam Office",
+      "position": "Full Stack Developer Intern",
+      "tenure": "2"
+    },
+    {
+      "id": 5,
+      "name": "Tamilmani",
+      "status": "FTE",
+      "age": "20",
+      "band": "C",
+      "gender": "Male",
+      "location": "Vyoobam Office",
+      "position": "Full Stack Developer Intern",
+      "tenure": "2"
+    },
+    {
+      "id": 6,
+      "name": "Harish",
+      "status": "FTE",
+      "age": "21",
+      "band": "C",
+      "gender": "Male",
+      "location": "Vyoobam Office",
+      "position": "Full Stack Developer Intern",
+      "tenure": "2"
+    },
+    {
+      "id": 7,
+      "name": "Balaji Anbu",
+      "status": "FTE",
+      "age": "26",
+      "band": "A",
+      "gender": "Male",
+      "location": "Vyoobam Office",
+      "position": "Flutter Developer Intern",
+      "tenure": "2"
+    },
+    {
+      "id": 8,
+      "name": "Siva Guru",
+      "status": "FTE",
+      "age": "23",
+      "band": "B",
+      "gender": "Male",
+      "location": "Vyoobam Office",
+      "position": "Full Stack Developer Intern",
+      "tenure": "2"
+    },
+    {
+      "id": 9,
+      "name": "Sanjai",
+      "status": "FTE",
+      "age": "25",
+      "band": "A",
+      "gender": "Male",
+      "location": "Vyoobam Office",
+      "position": "Full Stack Developer Intern",
+      "tenure": "2"
+    },
+    {
+      "id": 10,
+      "name": "Atchaya",
+      "status": "FTE",
+      "age": "25",
+      "band": "A",
+      "gender": "Female",
+      "location": "Vyoobam Office",
+      "position": "Full Stack Developer Intern",
+      "tenure": "2"
+    },
+    {
+      "id": 11,
+      "name": "Priya",
+      "status": "FTE",
+      "age": "25",
+      "band": "A",
+      "gender": "Female",
+      "location": "Vyoobam Office",
+      "position": "Full Stack Developer Intern",
+      "tenure": "2"
+    }
+  ],
+
+  "activities": [
+    {
+      "id": 1,
+      "employee": "Tamilmani",
+      "type": "Project",
+      "date": "2025-03-06",
+      "startTime": "10:00 AM",
+      "endTime": "12:00 PM",
+      "duration": 2,
+      "department": "IT",
+      "status": "Completed"
+    },
+    {
+      "id": 2,
+      "employee": "Dinesh",
+      "type": "Training",
+      "date": "2025-03-05",
+      "startTime": "02:00 PM",
+      "endTime": "03:30 PM",
+      "duration": 1.5,
+      "department": "IT",
+      "status": "In Progress"
+    },
+    {
+      "id": 3,
+      "employee": "Suriya",
+      "type": "Training",
+      "date": "2025-03-04",
+      "startTime": "09:00 AM",
+      "endTime": "05:00 PM",
+      "duration": 8,
+      "department": "IT",
+      "status": "Completed"
+    },
+    {
+      "id": 4,
+      "employee": "Huwaidha Sheerin",
+      "type": "Meeting",
+      "date": "2025-03-03",
+      "startTime": "Full Day",
+      "endTime": "Full Day",
+      "duration": 8,
+      "department": "IT",
+      "status": "In Progress"
+    },
+    {
+      "id": 5,
+      "employee": "Dharshini",
+      "type": "Meeting",
+      "date": "2025-03-03",
+      "startTime": "Full Day",
+      "endTime": "Full Day",
+      "duration": 8,
+      "department": "IT",
+      "status": "In Progress"
+    },
+    {
+      "id": 6,
+      "employee": "Aadhi",
+      "type": "Leave",
+      "date": "2025-03-03",
+      "startTime": "Full Day",
+      "endTime": "Full Day",
+      "duration": 8,
+      "department": "Sales",
+      "status": "Approved"
+    },
+    {
+      "id": 7,
+      "employee": "Priyanka",
+      "type": "Project",
+      "date": "2025-03-03",
+      "startTime": "Full Day",
+      "endTime": "Full Day",
+      "duration": 8,
+      "department": "Finance",
+      "status": "Completed"
+    },
+    {
+      "id": 8,
+      "employee": "Vijay",
+      "type": "Project",
+      "date": "2025-03-03",
+      "startTime": "Full Day",
+      "endTime": "Full Day",
+      "duration": 8,
+      "department": "Sales",
+      "status": "Completed"
+    },
+    {
+      "id": 9,
+      "employee": "Swetha Selvam",
+      "type": "Project",
+      "date": "2025-03-03",
+      "startTime": "Full Day",
+      "endTime": "Full Day",
+      "duration": 8,
+      "department": "HR",
+      "status": "Completed"
+    }
+  ],
+
+  "holidays": [
+    {
+      "id": 1,
+      "name": "New Year",
+      "date": "01-01-2025",
+      "day": "Wednesday",
+      "type": "Public",
+      "location": "All Locations",
+      "year": "2025",
+      "status": "Completed",
+      "description": "Celebrating the new year"
+    },
+    {
+      "id": 2,
+      "name": "Pongal",
+      "date": "14-01-2025",
+      "day": "Tuesday",
+      "type": "Public",
+      "location": "All Locations",
+      "year": "2025",
+      "status": "Completed",
+      "description": ""
+    },
+    {
+      "id": 3,
+      "name": "Thiruvalluvar Day",
+      "date": "15-01-2025",
+      "day": "Wednesday",
+      "type": "Public",
+      "location": "All Locations",
+      "year": "2025",
+      "status": "Completed",
+      "description": ""
+    },
+    {
+      "id": 4,
+      "name": "Uzhavar Thirunal",
+      "date": "16-01-2025",
+      "day": "Thursday",
+      "type": "Public",
+      "location": "All Locations",
+      "year": "2025",
+      "status": "Completed",
+      "description": ""
+    },
+    {
+      "id": 5,
+      "name": "Republic Day",
+      "date": "26-01-2025",
+      "day": "Sunday",
+      "type": "Public",
+      "location": "India",
+      "year": "2025",
+      "status": "Completed",
+      "description": "National holiday in India"
+    },
+    {
+      "id": 6,
+      "name": "Ramzan",
+      "date": "31-03-2025",
+      "day": "Wednesday",
+      "type": "Public",
+      "location": "All Locations",
+      "year": "2025",
+      "status": "Active",
+      "description": "Muslims religious holiday"
+    },
+    {
+      "id": 7,
+      "name": "Good Friday",
+      "date": "18-04-2025",
+      "day": "Friday",
+      "type": "Religious",
+      "location": "Global",
+      "year": "2025",
+      "status": "Active",
+      "description": "Christian religious holiday"
+    },
+    {
+      "id": 8,
+      "name": "Workers Day",
+      "date": "01-05-2025",
+      "day": "Thursday",
+      "type": "Public",
+      "location": "All Locations",
+      "year": "2025",
+      "status": "Active",
+      "description": ""
+    },
+    {
+      "id": 9,
+      "name": "Bakrid",
+      "date": "07-06-2025",
+      "day": "Saturday",
+      "type": "Public",
+      "location": "All Locations",
+      "year": "2025",
+      "status": "Active",
+      "description": ""
+    },
+    {
+      "id": 10,
+      "name": "Muharram",
+      "date": "06-07-2025",
+      "day": "Sunday",
+      "type": "Public",
+      "location": "All Locations",
+      "year": "2025",
+      "status": "Active",
+      "description": ""
+    },
+    {
+      "id": 11,
+      "name": "Independence Day",
+      "date": "15-08-2025",
+      "day": "Friday",
+      "type": "Public",
+      "location": "India",
+      "year": "2025",
+      "status": "Active",
+      "description": "India’s Independence Day"
+    },
+    {
+      "id": 12,
+      "name": "Christmas",
+      "date": "25-12-2025",
+      "day": "Thursday",
+      "type": "Religious",
+      "location": "All Locations",
+      "year": "2025",
+      "status": "Active",
+      "description": "Christmas celebrations"
+    },
+    {
+      "id": 13,
+      "name": "Diwali",
+      "date": "23-10-2025",
+      "day": "Thursday",
+      "type": "Religious",
+      "location": "India",
+      "year": "2025",
+      "status": "Active",
+      "description": "Festival of lights"
+    }
+  ],
+
+  "payroll": [
+    {
+      "id": 1,
+      "name": "Tamilmani",
+      "department": "Product Manager",
+      "basicSalary": 50000,
+      "allowances": 10000,
+      "deductions": 5000,
+      "tax": 3000,
+      "netSalary": 52000,
+      "status": "Processed"
+    },
+    {
+      "id": 2,
+      "name": "Gokul",
+      "department": "Designer",
+      "basicSalary": 45000,
+      "allowances": 8000,
+      "deductions": 4000,
+      "tax": 2500,
+      "netSalary": 46500,
+      "status": "Processed"
+    }
+  ],
+
+  "accounts": [
+    {
+      "id": "TXN1001",
+      "date": "2025-03-01",
+      "accType": "Salary Expense",
+      "description": "March Payroll Payment",
+      "amount": "2,00,000",
+      "transType": "Debit",
+      "status": "Completed"
+    },
+    {
+      "id": "TXN1002",
+      "date": "2025-03-02",
+      "accType": "Vendor Payment",
+      "description": "Office Rent",
+      "amount": "50,000",
+      "transType": "Debit",
+      "status": "Completed"
+    },
+    {
+      "id": "TXN1003",
+      "date": "2025-03-03",
+      "accType": "Revenue",
+      "description": "Client Invoice Paid",
+      "amount": "1,00,000",
+      "transType": "Credit",
+      "status": "Completed"
+    }
+  ],
+
+  "reports": {
+    "attendanceReport": [
+      {
+        "id": "101",
+        "name": "Tamilmani",
+        "department": "HR",
+        "workDays": "22",
+        "presDays": "20",
+        "absDays": "1",
+        "leaveDays": "1",
+        "hours": "5"
+      },
+      {
+        "id": "102",
+        "name": "Gokul",
+        "department": "IT",
+        "workDays": "22",
+        "presDays": "18",
+        "absDays": "2",
+        "leaveDays": "2",
+        "hours": "8"
+      },
+      {
+        "id": "103",
+        "name": "Harish",
+        "department": "IT",
+        "workDays": "22",
+        "presDays": "21",
+        "absDays": "1",
+        "leaveDays": "0",
+        "hours": "3"
+      }
+    ],
+    "leaveReport": [
+      {
+        "id": "101",
+        "name": "Tamilmani",
+        "department": "HR",
+        "leaveType": "Sick Leave",
+        "leaveDays": "2",
+        "leaveStatus": "Approved",
+        "date": "2025-03-10",
+        "approve": "HR Manager"
+      },
+      {
+        "id": "102",
+        "name": "Gokul",
+        "department": "IT",
+        "leaveType": "Casual Leave",
+        "leaveDays": "3",
+        "leaveStatus": "Approved",
+        "date": "2025-03-11",
+        "approve": "Team Lead"
+      },
+      {
+        "id": "103",
+        "name": "Harish",
+        "department": "IT",
+        "leaveType": "Casual Leave",
+        "leaveDays": "1",
+        "leaveStatus": "Approved",
+        "date": "2025-03-12",
+        "approve": "Team Lead"
+      }
+    ],
+    "performanceReport": [
+      {
+        "id": "101",
+        "name": "Tamilmani",
+        "department": "HR",
+        "score": "85",
+        "rating": "Excellent",
+        "status": "Eligible",
+        "date": "2025-02-28"
+      },
+      {
+        "id": "102",
+        "name": "Gokul",
+        "department": "IT",
+        "score": "78",
+        "rating": "Good",
+        "status": "Eligible",
+        "date": "2025-02-28"
+      },
+      {
+        "id": "103",
+        "name": "Harish",
+        "department": "IT",
+        "score": "90",
+        "rating": "Outstanding",
+        "status": "Eligible",
+        "date": "2025-02-28"
+      }
+    ]
+  }
+}
