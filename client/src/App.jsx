@@ -24,80 +24,106 @@ import Payroll from "./scenes/payroll/index";
 import Accounts from "./scenes/accounts/index";
 import Reports from "./scenes/reports/index";
 import Navbar from "./Components/Navbar";
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme'; 
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "./theme";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/auth/checkSession")
-      .then((response) => {
-        setIsAuthenticated(response.data.loggedIn);
-      })
-      .catch(() => setIsAuthenticated(true));
+    const loggedIn = localStorage.getItem("isLoggedIn");
+
+    if (loggedIn === "true") {
+      setIsAuthenticated(true);
+    } else {
+      axios
+        .get("http://localhost:3000/auth/checkSession")
+        .then((response) => {
+          if (response.data.loggedIn) {
+            setIsAuthenticated(true);
+            localStorage.setItem("isLoggedIn", "true");
+          } else {
+            setIsAuthenticated(false);
+            localStorage.removeItem("isLoggedIn");
+          }
+        })
+        .catch(() => {
+          setIsAuthenticated(false);
+          localStorage.removeItem("isLoggedIn");
+        });
+    }
   }, []);
 
+  // ✅ Add this function
   const handleToggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
   };
+  
 
   return (
     <ThemeProvider theme={theme}>
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={isAuthenticated ? <Navigate to="/dashpage" /> : <Navigate to="/login" />}
-        />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-        <Route path="/forgotPassword" element={<ForgotPassword />} />
-        <Route path="/resetPassword/:token" element={<ResetPassword />} />
-
-        {isAuthenticated && (
+      <Router>
+        <Routes>
           <Route
-            path="/*"
+            path="/"
             element={
-              <Box display="flex">
-                {isSidebarOpen ? (
-                  <Sidebar onToggle={handleToggleSidebar} />
-                ) : (
-                  <SmallSidebar onToggle={handleToggleSidebar} />
-                )}
-                <Box
-                  flex={1}
-                  display="flex"
-                  flexDirection="column"
-                  sx={{
-                    marginLeft: isSidebarOpen ? "220px" : "60px",
-                    transition: "margin-left 0.3s ease-in-out",
-                  }}
-                >
-                  <Navbar/>
-                  <Box flex={1} p={2}>
-                    <Routes>
-                      <Route path="/dashpage" element={<Dashpage />} />
-                      <Route path="/create-user" element={<Users />} />
-                      <Route path="/department" element={<Department />} />
-                      <Route path="/employee" element={<Employee />} />
-                      <Route path="/activities" element={<Activities />} />
-                      <Route path="/holidays" element={<Holidays />} />
-                      <Route path="/events" element={<Events />} />
-                      <Route path="/payroll" element={<Payroll />} />
-                      <Route path="/accounts" element={<Accounts />} />
-                      <Route path="/reports" element={<Reports />} />
-                    </Routes>
-                  </Box>
-                </Box>
-              </Box>
+              isAuthenticated ? (
+                <Navigate to="/dashpage" />
+              ) : (
+                <Navigate to="/login" />
+              )
             }
           />
-        )}
-      </Routes>
-    </Router>
+          <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/login"
+            element={<Login setIsAuthenticated={setIsAuthenticated} />}
+          />
+          <Route path="/forgotPassword" element={<ForgotPassword />} />
+          <Route path="/resetPassword/:token" element={<ResetPassword />} />
+
+          {isAuthenticated && (
+            <Route
+              path="/*"
+              element={
+                <Box display="flex">
+                  {isSidebarOpen ? (
+                    <Sidebar onToggle={handleToggleSidebar} />
+                  ) : (
+                    <SmallSidebar onToggle={handleToggleSidebar} />
+                  )}
+                  <Box
+                    flex={1}
+                    display="flex"
+                    flexDirection="column"
+                    sx={{
+                      marginLeft: isSidebarOpen ? "220px" : "60px",
+                      transition: "margin-left 0.3s ease-in-out",
+                    }}
+                  >
+                    <Navbar />
+                    <Box flex={1} p={2}>
+                      <Routes>
+                        <Route path="/dashpage" element={<Dashpage />} />
+                        <Route path="/create-user" element={<Users />} />
+                        <Route path="/department" element={<Department />} />
+                        <Route path="/employee" element={<Employee />} />
+                        <Route path="/activities" element={<Activities />} />
+                        <Route path="/holidays" element={<Holidays />} />
+                        <Route path="/events" element={<Events />} />
+                        <Route path="/payroll" element={<Payroll />} />
+                        <Route path="/accounts" element={<Accounts />} />
+                        <Route path="/reports" element={<Reports />} />
+                      </Routes>
+                    </Box>
+                  </Box>
+                </Box>
+              }
+            />
+          )}
+        </Routes>
+      </Router>
     </ThemeProvider>
   );
 }

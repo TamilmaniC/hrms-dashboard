@@ -10,7 +10,7 @@ import { Box } from "@mui/system";
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const Reports = () => {
-  const [searchParams] = useSearchParams(); // ✅ Now it will work
+  const [searchParams] = useSearchParams();
   const selectedReport = searchParams.get("type") || "attendance";
 
   const attColumn = [
@@ -33,15 +33,6 @@ const Reports = () => {
     { field: "date" },
     { field: "approve" },
   ];
-  const perfColumn = [
-    { field: "id" },
-    { field: "name" },
-    { field: "department" },
-    { field: "score" },
-    { field: "rating" },
-    { field: "status" },
-    { field: "date" },
-  ];
 
   const defaultColDef = useMemo(() => {
     return {
@@ -63,12 +54,6 @@ const Reports = () => {
           title: "Employee's Leave Report",
           columns: leaveColumn,
           data: hrmsData.reports.leaveReport,
-        };
-      case "performance":
-        return {
-          title: "Employee's Performance Report",
-          columns: perfColumn,
-          data: hrmsData.reports.performanceReport,
         };
       default:
         return {

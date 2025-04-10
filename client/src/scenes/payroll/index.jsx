@@ -12,8 +12,7 @@ const cards = [
   { title: "Total Payroll", value: "82,441" },
   { title: "Total Department", value: "6" },
   { title: "Gross Salary", value: "67,454" },
-  { title: "Accuracy Rate", value: "97%" },
-  { title: "Total Headcount", value: "626" },
+  { title: "Total Employees", value: "626" },
 ];
 
 const Payroll = () => {
@@ -61,7 +60,7 @@ const Payroll = () => {
           <Grid2 xs={12} sm={6} md={2}>
             <Card
               sx={{
-                width: "180px",
+                width: "250px",
                 height: "120px",
                 background: "#fff",
                 borderRadius: 3,

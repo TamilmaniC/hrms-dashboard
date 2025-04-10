@@ -173,14 +173,6 @@ const Sidebar = ({ onToggle }) => {
                     <ListItemText primary="Leave Report" />
                   </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding>
-                  <ListItemButton
-                    component={Link}
-                    to="/reports?type=performance"
-                  >
-                    <ListItemText primary="Performance Report" />
-                  </ListItemButton>
-                </ListItem>
               </List>
             </Collapse>
 

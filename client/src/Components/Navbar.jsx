@@ -25,7 +25,7 @@ const Navbar = ({ setIsAuthenticated }) => {
       <AppBar
         position="fixed"
         elevation="3"
-        sx={{ zIndex: 1201, backgroundColor: "#3498db" }}
+        sx={{ zIndex: 1201, backgroundColor: "#3498db"}}
       >
         <Toolbar>
           <Typography

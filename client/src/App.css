@@ -3,6 +3,10 @@
   padding: 0;
 }
 
+/* body {
+  overflow: hidden; 
+} */
+
 .sign-up-container {
   font-family: "Poppins", sans-serif;
   font-optical-sizing: auto;
@@ -46,3 +50,46 @@
 .sidebar {
   transition: width 0.3s ease-in-out;
 }
+
+.calendar-wrapper {
+  background: linear-gradient(135deg, #2196f3, #21cbf3); /* blue gradient */
+  padding: 5px;
+  border-radius: 25px;
+  display: inline-block;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.react-calendar {
+  background: white;
+  border: none;
+  font-family: "Poppins", sans-serif !important;
+  width: 100%;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.react-calendar * {
+  font-family: "Poppins", sans-serif !important;
+}
+
+.react-calendar__navigation {
+  background: transparent;
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+}
+
+.react-calendar__navigation button {
+  background: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.react-calendar__tile {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 80%;
+  padding: 10px 0;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+

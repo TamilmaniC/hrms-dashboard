@@ -28,139 +28,14 @@
     }
   ],
 
-
-  "employee": [
-    {
-      "id": 1,
-      "name": "Gokul",
-      "status": "FTE",
-      "age": "22",
-      "band": "B",
-      "gender": "Male",
-      "location": "Vyoobam Office",
-      "position": "Full Stack Developer Intern",
-      "tenure": "2"
-    },
-    {
-      "id": 2,
-      "name": "Keerthana",
-      "status": "FTE",
-      "age": "22",
-      "band": "C",
-      "gender": "Female",
-      "location": "Vyoobam Office",
-      "position": "Full Stack Developer Intern",
-      "tenure": "2"
-    },
-    {
-      "id": 3,
-      "name": "Manisha",
-      "status": "FTE",
-      "age": "21",
-      "band": "B",
-      "gender": "Female",
-      "location": "Vyoobam Office",
-      "position": "Full Stack Developer Intern",
-      "tenure": "2"
-    },
-    {
-      "id": 4,
-      "name": "Kalaivani",
-      "status": "FTE",
-      "age": "20",
-      "band": "C",
-      "gender": "Female",
-      "location": "Vyoobam Office",
-      "position": "Full Stack Developer Intern",
-      "tenure": "2"
-    },
-    {
-      "id": 5,
-      "name": "Tamilmani",
-      "status": "FTE",
-      "age": "20",
-      "band": "C",
-      "gender": "Male",
-      "location": "Vyoobam Office",
-      "position": "Full Stack Developer Intern",
-      "tenure": "2"
-    },
-    {
-      "id": 6,
-      "name": "Harish",
-      "status": "FTE",
-      "age": "21",
-      "band": "C",
-      "gender": "Male",
-      "location": "Vyoobam Office",
-      "position": "Full Stack Developer Intern",
-      "tenure": "2"
-    },
-    {
-      "id": 7,
-      "name": "Balaji Anbu",
-      "status": "FTE",
-      "age": "26",
-      "band": "A",
-      "gender": "Male",
-      "location": "Vyoobam Office",
-      "position": "Flutter Developer Intern",
-      "tenure": "2"
-    },
-    {
-      "id": 8,
-      "name": "Siva Guru",
-      "status": "FTE",
-      "age": "23",
-      "band": "B",
-      "gender": "Male",
-      "location": "Vyoobam Office",
-      "position": "Full Stack Developer Intern",
-      "tenure": "2"
-    },
-    {
-      "id": 9,
-      "name": "Sanjai",
-      "status": "FTE",
-      "age": "25",
-      "band": "A",
-      "gender": "Male",
-      "location": "Vyoobam Office",
-      "position": "Full Stack Developer Intern",
-      "tenure": "2"
-    },
-    {
-      "id": 10,
-      "name": "Atchaya",
-      "status": "FTE",
-      "age": "25",
-      "band": "A",
-      "gender": "Female",
-      "location": "Vyoobam Office",
-      "position": "Full Stack Developer Intern",
-      "tenure": "2"
-    },
-    {
-      "id": 11,
-      "name": "Priya",
-      "status": "FTE",
-      "age": "25",
-      "band": "A",
-      "gender": "Female",
-      "location": "Vyoobam Office",
-      "position": "Full Stack Developer Intern",
-      "tenure": "2"
-    }
-  ],
-
   "activities": [
     {
       "id": 1,
       "employee": "Tamilmani",
       "type": "Project",
-      "date": "2025-03-06",
-      "startTime": "10:00 AM",
-      "endTime": "12:00 PM",
+      "date": "2025-03-01",
+      "logIn": "10:00 AM",
+      "logOut": "12:00 PM",
       "duration": 2,
       "department": "IT",
       "status": "Completed"
@@ -170,8 +45,8 @@
       "employee": "Dinesh",
       "type": "Training",
       "date": "2025-03-05",
-      "startTime": "02:00 PM",
-      "endTime": "03:30 PM",
+      "logIn": "02:00 PM",
+      "logOut": "03:30 PM",
       "duration": 1.5,
       "department": "IT",
       "status": "In Progress"
@@ -181,8 +56,8 @@
       "employee": "Suriya",
       "type": "Training",
       "date": "2025-03-04",
-      "startTime": "09:00 AM",
-      "endTime": "05:00 PM",
+      "logIn": "09:00 AM",
+      "logOut": "05:00 PM",
       "duration": 8,
       "department": "IT",
       "status": "Completed"
@@ -192,8 +67,8 @@
       "employee": "Huwaidha Sheerin",
       "type": "Meeting",
       "date": "2025-03-03",
-      "startTime": "Full Day",
-      "endTime": "Full Day",
+      "logIn": "Full Day",
+      "logOut": "Full Day",
       "duration": 8,
       "department": "IT",
       "status": "In Progress"
@@ -203,8 +78,8 @@
       "employee": "Dharshini",
       "type": "Meeting",
       "date": "2025-03-03",
-      "startTime": "Full Day",
-      "endTime": "Full Day",
+      "logIn": "Full Day",
+      "logOut": "Full Day",
       "duration": 8,
       "department": "IT",
       "status": "In Progress"
@@ -214,8 +89,8 @@
       "employee": "Aadhi",
       "type": "Leave",
       "date": "2025-03-03",
-      "startTime": "Full Day",
-      "endTime": "Full Day",
+      "logIn": "Full Day",
+      "logOut": "Full Day",
       "duration": 8,
       "department": "Sales",
       "status": "Approved"
@@ -225,8 +100,8 @@
       "employee": "Priyanka",
       "type": "Project",
       "date": "2025-03-03",
-      "startTime": "Full Day",
-      "endTime": "Full Day",
+      "logIn": "Full Day",
+      "logOut": "Full Day",
       "duration": 8,
       "department": "Finance",
       "status": "Completed"
@@ -236,8 +111,8 @@
       "employee": "Vijay",
       "type": "Project",
       "date": "2025-03-03",
-      "startTime": "Full Day",
-      "endTime": "Full Day",
+      "logIn": "Full Day",
+      "logOut": "Full Day",
       "duration": 8,
       "department": "Sales",
       "status": "Completed"
@@ -247,14 +122,13 @@
       "employee": "Swetha Selvam",
       "type": "Project",
       "date": "2025-03-03",
-      "startTime": "Full Day",
-      "endTime": "Full Day",
+      "logIn": "Full Day",
+      "logOut": "Full Day",
       "duration": 8,
       "department": "HR",
       "status": "Completed"
     }
   ],
-
   "holidays": [
     {
       "id": 1,
@@ -519,35 +393,6 @@
         "leaveStatus": "Approved",
         "date": "2025-03-12",
         "approve": "Team Lead"
-      }
-    ],
-    "performanceReport": [
-      {
-        "id": "101",
-        "name": "Tamilmani",
-        "department": "HR",
-        "score": "85",
-        "rating": "Excellent",
-        "status": "Eligible",
-        "date": "2025-02-28"
-      },
-      {
-        "id": "102",
-        "name": "Gokul",
-        "department": "IT",
-        "score": "78",
-        "rating": "Good",
-        "status": "Eligible",
-        "date": "2025-02-28"
-      },
-      {
-        "id": "103",
-        "name": "Harish",
-        "department": "IT",
-        "score": "90",
-        "rating": "Outstanding",
-        "status": "Eligible",
-        "date": "2025-02-28"
       }
     ]
   }
