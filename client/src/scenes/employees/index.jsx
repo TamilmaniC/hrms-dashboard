@@ -1,6 +1,6 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
+import React, { useEffect, useState, useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
+import axios from "axios";
 import {
   Button,
   Dialog,
@@ -8,82 +8,85 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  IconButton
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import Header from "../../components/Header";
-import hrmsData from "../../data/hrmsData.json";
-import { duration } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CloseIcon from "@mui/icons-material/Close";
-import axios from "axios";
-ModuleRegistry.registerModules([AllCommunityModule]);
-const Activities = () => {
+import IconButton from "@mui/material/IconButton";
+const Employee = () => {
   const [rowData, setRowData] = useState([]);
-  const [open, setOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const fetchActivities = async () => {
+  const [open, setOpen] = useState(false);
+  // Fetch employees from API
+  const fetchEmployees = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/activities");
+      const response = await axios.get("http://localhost:3000/api/employees");
       setRowData(response.data);
     } catch (error) {
-      console.error("Error fetching activities:", error);
+      console.error("Error fetching employees:", error);
     }
   };
   useEffect(() => {
-    fetchActivities();
+    fetchEmployees();
   }, []);
+  // Handle Delete
   const handleDelete = async (id) => {
+    console.log("Deleting Employee ID:", id); // :white_tick: Check if correct ID is sent
     try {
-      await axios.delete(`http://localhost:3000/api/activities/${id}`);
-      fetchActivities(); // refresh table
+      await axios.delete(`http://localhost:3000/api/employees/${id}`);
+      fetchEmployees(); // Refresh table after deletion
     } catch (error) {
-      console.error("Error deleting activity:", error);
+      console.error("Error deleting employee:", error);
     }
   };
+  // Handle Edit
   const handleEdit = (row) => {
     setSelectedRow(row);
     setShowEditModal(true);
   };
+  // Handle Save
   const handleSave = async () => {
-    console.log("Saving Activity Data:", selectedRow);
+    console.log("Saving Employee Data:", selectedRow); // :white_tick: Check if values exist
     if (!selectedRow || !selectedRow._id) return;
     try {
-      await axios.put(`http://localhost:3000/api/activities/${selectedRow._id}`, selectedRow);
-      fetchActivities(); // Refresh table after update
+      await axios.put(
+        `http://localhost:3000/api/employees/${selectedRow._id}`,
+        selectedRow
+      );
+      fetchEmployees(); // Refresh table after update
       setShowEditModal(false);
     } catch (error) {
-      console.error("Error updating activity:", error);
+      console.error("Error updating employee:", error);
     }
   };
-  const addActivity = async (values) => {
+  // Handle Add Employee
+  const addEmployee = async (values) => {
     try {
-      await axios.post("http://localhost:3000/api/activities/add", values);
+      await axios.post("http://localhost:3000/api/employees/add", values);
+      fetchEmployees(); // Refresh table after adding
       setOpen(false);
-      fetchActivities();
     } catch (error) {
-      console.error("Error adding activity:", error);
+      console.error("Error adding employee:", error);
     }
   };
-  const [columnDefs] = useState([
-    { headerName: "ID", field: "id" },
-    { headerName: "Employee Name", field: "employeeName" },
-    { headerName: "Type", field: "type" },
-    {
-      headerName: "Date", field: "date",
-      valueFormatter: (params) => {
-        if (!params.value) return "";
-        return new Date(params.value).toLocaleDateString();
-      }
-    },
-    { headerName: "Duration", field: "duration" },
-    { headerName: "Department", field: "department" },
-    { headerName: "Status", field: "status" },
+  // Column Definitions
+  const columnDefs = [
+    { field: "empId", headerName: "Emp ID" },
+    { field: "name", headerName: "Name" },
+    { field: "age", headerName: "Age" },
+    { field: "gender", headerName: "Gender" },
+    { field: "dob", headerName: "Date of Birth" },
+    { field: "email", headerName: "Email ID" },
+    { field: "contact", headerName: "Contact Number" },
+    { field: "address", headerName: "Address" },
+    { field: "status", headerName: "Status" },
+    { field: "joiningDate", headerName: "Joining Date" },
+    { field: "role", headerName: "Role" },
+    { field: "tenure", headerName: "Tenure" },
+    { field: "band", headerName: "Band" },
     {
       headerName: "Actions",
       field: "actions",
@@ -97,10 +100,7 @@ const Activities = () => {
             <EditIcon />
           </IconButton>
           <IconButton
-            onClick={() => {
-              setDeleteId(params.data._id);
-              setConfirmOpen(true);
-            }}
+            onClick={() => handleDelete(params.data._id)}
             color="primary"
             size="small"
           >
@@ -110,16 +110,24 @@ const Activities = () => {
       ),
       width: 120,
     },
-  ]);
-  const ActivitySchema = Yup.object().shape({
-    id: Yup.string().required("ID is required"),
-    employeeName: Yup.string().required("Employee Name is required"),
-    type: Yup.string().required("Type is required"),
-    date: Yup.date().required("Date is required"),
-    duration: Yup.string().required("Duration is required"),
-    department: Yup.string().required("Department is required"),
-    status: Yup.string().required("Status is required"),
+  ];
+  // Validation Schema
+  const EmployeeSchema = Yup.object().shape({
+    empId: Yup.string().required("Required"),
+    name: Yup.string().required("Required"),
+    age: Yup.number().required("Required").positive().integer(),
+    gender: Yup.string().required("Required"),
+    dob: Yup.date().required("Required"),
+    email: Yup.string().email("Invalid email").required("Required"),
+    contact: Yup.string().required("Required"),
+    address: Yup.string().required("Required"),
+    status: Yup.string().required("Required"),
+    joiningDate: Yup.date().required("Required"),
+    role: Yup.string().required("Required"),
+    tenure: Yup.number().required("Required").positive().integer(),
+    band: Yup.string().required("Required"),
   });
+  // AG Grid Default Settings
   const defaultColDef = useMemo(
     () => ({
       filter: "agTextColumnFilter",
@@ -137,14 +145,14 @@ const Activities = () => {
         marginLeft: "5%",
       }}
     >
-      <Header title="ACTIVITIES" subtitle="Employee Activity Tracking" />
+      <Header title="EMPLOYEE" subtitle="Org Employee Details" />
       <Button
         variant="contained"
         color="primary"
         onClick={() => setOpen(true)}
         sx={{ mb: 2 }}
       >
-        Add Activities
+        Add Employee
       </Button>
       <AgGridReact
         rowData={rowData}
@@ -155,173 +163,125 @@ const Activities = () => {
         paginationPageSize={10}
         paginationPageSizeSelector={[10, 25, 50]}
       />
-      {/*Add Activity Modal*/}
+      {/* Edit Employee Modal */}
+      <Dialog open={showEditModal} onClose={() => setShowEditModal(false)}>
+        <DialogTitle>Edit Employee</DialogTitle>
+        <DialogContent>
+          {selectedRow && (
+            <>
+              {Object.keys(selectedRow).map(
+                (key) =>
+                  key !== "_id" &&
+                  key !== "__v" && (
+                    <TextField
+                      key={key}
+                      label={key.charAt(0).toUpperCase() + key.slice(1)}
+                      fullWidth
+                      margin="dense"
+                      value={selectedRow[key] || ""}
+                      onChange={(e) =>
+                        setSelectedRow({
+                          ...selectedRow,
+                          [key]: e.target.value,
+                        })
+                      }
+                    />
+                  )
+              )}
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowEditModal(false)}>Cancel</Button>
+          <Button onClick={handleSave} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* Add Employee Modal */}
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
         fullWidth
         maxWidth="sm"
       >
-        <div className="modal-header" style={{ background: "#1976D2", color: "white", fontWeight: "bold", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", borderBottom: "1px solid #ddd" }}>
-          <DialogTitle> Add Activity</DialogTitle>
-          <IconButton onClick={() => setOpen(false)} color="dark">
-            <CloseIcon sx={{ color: "white" }} />
-          </IconButton>
-        </div>
+        <DialogTitle>Add New Employee</DialogTitle>
         <Formik
           initialValues={{
-            id: "",
-            employeeName: "",
-            type: "",
-            date: "",
-            duration: "",
-            department: "",
+            empId: "",
+            name: "",
+            age: "",
+            gender: "",
+            dob: "",
+            email: "",
+            contact: "",
+            address: "",
             status: "",
+            joiningDate: "",
+            role: "",
+            tenure: "",
+            band: "",
           }}
-          validationSchema={ActivitySchema}
+          validationSchema={EmployeeSchema}
           onSubmit={(values, { resetForm }) => {
-            console.log("Submitting values:", values);
-            addActivity(values);
+            addEmployee(values);
             resetForm();
           }}
         >
           {({ errors, touched }) => (
             <Form>
-              <div className="modal-body" style={{ padding: "16px" }}>
-                <DialogContent>
-                  {[
-                    "id",
-                    "employeeName",
-                    "type",
-                    "date",
-                    "duration",
-                    "department",
-                    "status",
-                  ].map((field) => (
-                    <Field
-                      key={field}
-                      as={TextField}
-                      name={field}
-                      label={field.charAt(0).toUpperCase() + field.slice(1)}
-                      error={touched[field] && !!errors[field]}
-                      helperText={touched[field] && errors[field]}
-                      fullWidth
-                      margin="dense"
-                      type={field === "date" ? "date" : "text"}   // :point_left: handle date input properly
-                      InputLabelProps={field === "date" ? { shrink: true } : {}}
-                    />
-                  ))}
-                </DialogContent>
-              </div>
-              <div className="modal-footer" style={{ display: "flex", justifyContent: "flex-end", padding: "16px", borderTop: "1px solid #ddd" }}>
-                <DialogActions
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "transparent",
-                      boxShadow: "none",
-                    },
-                  }}
-                >
-                  <Button type="submit" variant="outlined" color="primary">
-                    Add Activity
-                  </Button>
-                  <Button color="error" variant="outlined" onClick={() => setOpen(false)}>Cancel</Button>
-                </DialogActions>
-              </div>
+              <DialogContent>
+                {[
+                  "empId",
+                  "name",
+                  "age",
+                  "gender",
+                  "dob",
+                  "email",
+                  "contact",
+                  "address",
+                  "status",
+                  "joiningDate",
+                  "role",
+                  "tenure",
+                  "band",
+                ].map((field) => (
+                  <Field
+                    key={field}
+                    as={TextField}
+                    fullWidth
+                    margin="dense"
+                    name={field}
+                    label={field.charAt(0).toUpperCase() + field.slice(1)}
+                    error={touched[field] && !!errors[field]}
+                    helperText={touched[field] && errors[field]}
+                  />
+                ))}
+              </DialogContent>
+              <DialogActions
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "transparent",
+                    boxShadow: "none",
+                  },
+                }}
+              >
+                <Button onClick={() => setOpen(false)}>Cancel</Button>
+                <Button type="submit" color="primary" variant="contained">
+                  Add
+                </Button>
+              </DialogActions>
             </Form>
           )}
         </Formik>
       </Dialog>
-      {/* Edit Activity*/}
-      <Dialog
-        open={showEditModal}
-        onClose={() => setShowEditModal(false)}
-        fullWidth
-        maxWidth="sm"
-      >
-        <div className="modal-header" style={{ background: "#1976D2", color: "white", fontWeight: "bold", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", borderBottom: "1px solid #ddd" }}>
-          <DialogTitle>Edit Activity</DialogTitle>
-          <IconButton onClick={() => setShowEditModal(false)} color="dark">
-            <CloseIcon sx={{ color: "white" }} />
-          </IconButton>
-        </div>
-        <div className="modal-body" style={{ padding: "16px" }}>
-          <DialogContent>
-            {selectedRow && (
-              <>
-                {Object.keys(selectedRow).map(
-                  (key) =>
-                    key !== "_id" &&
-                    key !== "__v" && (
-                      <TextField
-                        key={key}
-                        label={key.charAt(0).toUpperCase() + key.slice(1)}
-                        fullWidth
-                        margin="dense"
-                        type={key === "date" ? "date" : "text"}
-                        value={
-                          key === "date"
-                            ? new Date(selectedRow[key]).toISOString().split("T")[0]
-                            : selectedRow[key] || ""
-                        }
-                        InputLabelProps={key === "date" ? { shrink: true } : {}}
-                        onChange={(e) =>
-                          setSelectedRow({
-                            ...selectedRow,
-                            [key]: e.target.value,
-                          })
-                        }
-                      />
-                    )
-                )}
-              </>
-            )}
-          </DialogContent>
-        </div>
-        <div className="modal-footer" style={{ display: "flex", justifyContent: "flex-end", padding: "16px", borderTop: "1px solid #ddd" }}>
-          <DialogActions>
-            <Button color="error" variant="outlined" onClick={() => setShowEditModal(false)}>Cancel</Button>
-            <Button onClick={handleSave} color="primary" variant="outlined">
-              Save
-            </Button>
-          </DialogActions>
-        </div>
-      </Dialog>
-      {/* Delete Activity */}
-      <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
-        <div className="modal-header" style={{ background: "#1976D2", color: "white", fontWeight: "bold", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", borderBottom: "1px solid #ddd" }}>
-          <DialogTitle>Confirm Deletion</DialogTitle>
-          <IconButton onClick={() => setConfirmOpen(false)} color="dark">
-            <CloseIcon sx={{ color: "white" }} />
-          </IconButton>
-        </div>
-        <div className="modal-body" style={{ padding: "16px", fontFamily: "Poppins" }}>
-          <DialogContent >
-            Are you sure want to delete this activity?
-          </DialogContent>
-        </div>
-        <div className="modal-footer" style={{ display: "flex", justifyContent: "flex-end", padding: "16px", borderTop: "1px solid #ddd" }}>
-          <DialogActions>
-            <Button onClick={() => setConfirmOpen(false)} color="primary" variant="outlined">
-              Cancel
-            </Button>
-            <Button
-              onClick={() => {
-                handleDelete(deleteId);
-                setConfirmOpen(false);
-              }}
-              color="error"
-              variant="outlined"
-            >
-              Delete
-            </Button>
-          </DialogActions>
-        </div>
-      </Dialog>
     </div>
   );
 };
-export default Activities;
+export default Employee;
+
+
+
 
 
 

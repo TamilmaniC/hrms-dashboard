@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import { UserRouter } from './routes/user.js';
 import EmployeeRouter from './routes/employee.js';
 import GoogleAuthRouter from './routes/googleAuth.js'; // ✅
+import ActivityRouter from './routes/activity.js'; // ✅ updated name to match file
 
 dotenv.config();
 
@@ -21,7 +22,8 @@ app.use(cookieParser());
 
 app.use('/auth', UserRouter);
 app.use('/api/employees', EmployeeRouter);
-app.use('/auth', GoogleAuthRouter); 
+app.use('/api/activities', ActivityRouter)
+app.use('/auth', GoogleAuthRouter); // ✅
 
 mongoose.connect('mongodb://127.0.0.1:27017/authentication');
 
