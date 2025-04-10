@@ -25,7 +25,7 @@ const Navbar = ({ setIsAuthenticated }) => {
       <AppBar
         position="fixed"
         elevation="3"
-        sx={{ zIndex: 1201, backgroundColor: "#3498db"}}
+        sx={{ zIndex: 1201, backgroundColor: "9FB3DF"}}
       >
         <Toolbar>
           <Typography
@@ -45,7 +45,7 @@ const Navbar = ({ setIsAuthenticated }) => {
             onClick={handleLogout}
             sx={{
               "&:hover": {
-                backgroundColor: "transparent", // Prevent hover effects
+                backgroundColor: "transparent",
                 boxShadow: "none",
               },
             }}

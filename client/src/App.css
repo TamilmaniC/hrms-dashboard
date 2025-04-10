@@ -52,7 +52,7 @@
 }
 
 .calendar-wrapper {
-  background: linear-gradient(135deg, #2196f3, #21cbf3); /* blue gradient */
+  background: linear-gradient(135deg, #2196f3, #21cbf3); 
   padding: 5px;
   border-radius: 25px;
   display: inline-block;
