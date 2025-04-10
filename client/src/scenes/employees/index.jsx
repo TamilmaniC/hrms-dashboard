@@ -14,6 +14,7 @@ import * as Yup from "yup";
 import Header from "../../components/Header";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 
 const Employee = () => {
@@ -21,6 +22,8 @@ const Employee = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [open, setOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   // Fetch employees from API
   const fetchEmployees = async () => {
@@ -38,7 +41,7 @@ const Employee = () => {
 
   // Handle Delete
   const handleDelete = async (id) => {
-    console.log("Deleting Employee ID:", id); // ✅ Check if correct ID is sent
+    console.log("Deleting Employee ID:", id);
     try {
       await axios.delete(`http://localhost:3000/api/employees/${id}`);
       fetchEmployees(); // Refresh table after deletion
@@ -55,7 +58,7 @@ const Employee = () => {
 
   // Handle Save
   const handleSave = async () => {
-    console.log("Saving Employee Data:", selectedRow); // ✅ Check if values exist
+    console.log("Saving Employee Data:", selectedRow);
     if (!selectedRow || !selectedRow._id) return;
     try {
       await axios.put(
@@ -103,7 +106,10 @@ const Employee = () => {
             <EditIcon />
           </IconButton>
           <IconButton
-            onClick={() => handleDelete(params.data._id)}
+            onClick={() => {
+              setDeleteId(params.data._id);
+              setConfirmOpen(true);
+            }}
             color="primary"
             size="small"
           >
@@ -168,38 +174,48 @@ const Employee = () => {
 
       {/* Edit Employee Modal */}
       <Dialog open={showEditModal} onClose={() => setShowEditModal(false)}>
-        <DialogTitle>Edit Employee</DialogTitle>
-        <DialogContent>
-          {selectedRow && (
-            <>
-              {Object.keys(selectedRow).map(
-                (key) =>
-                  key !== "_id" &&
-                  key !== "__v" && (
-                    <TextField
-                      key={key}
-                      label={key.charAt(0).toUpperCase() + key.slice(1)}
-                      fullWidth
-                      margin="dense"
-                      value={selectedRow[key] || ""}
-                      onChange={(e) =>
-                        setSelectedRow({
-                          ...selectedRow,
-                          [key]: e.target.value,
-                        })
-                      }
-                    />
-                  )
-              )}
-            </>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowEditModal(false)}>Cancel</Button>
-          <Button onClick={handleSave} color="primary">
-            Save
-          </Button>
-        </DialogActions>
+        <div className="modal-header" style={{ background: "#1976D2", color: "white", fontWeight: "bold", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", borderBottom: "1px solid #ddd" }}>
+          <DialogTitle>Edit Employee</DialogTitle>
+          <IconButton onClick={() => setShowEditModal(false)} color="dark">
+            <CloseIcon sx={{ color: "white" }} />
+          </IconButton>
+        </div>
+        <div className="modal-body" style={{ padding: "16px" }}>
+          <DialogContent>
+            {selectedRow && (
+              <>
+                {Object.keys(selectedRow).map(
+                  (key) =>
+                    key !== "_id" &&
+                    key !== "__v" && (
+                      <TextField
+                        key={key}
+                        label={key.charAt(0).toUpperCase() + key.slice(1)}
+                        fullWidth
+                        margin="dense"
+                        value={selectedRow[key] || ""}
+                        onChange={(e) =>
+                          setSelectedRow({
+                            ...selectedRow,
+                            [key]: e.target.value,
+                          })
+                        }
+                      />
+                    )
+                )}
+              </>
+            )}
+          </DialogContent>
+        </div>
+        <div className="modal-footer" style={{ display: "flex", justifyContent: "flex-end", padding: "16px", borderTop: "1px solid #ddd" }}>
+          <DialogActions>
+            <Button onClick={handleSave} color="primary" variant="outlined">
+              Save
+            </Button>
+            <Button color="error" variant="outlined" onClick={() => setShowEditModal(false)}>Cancel</Button>
+
+          </DialogActions>
+        </div>
       </Dialog>
 
       {/* Add Employee Modal */}
@@ -209,7 +225,13 @@ const Employee = () => {
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle>Add New Employee</DialogTitle>
+        <div className="modal-header" style={{ background: "#1976D2", color: "white", fontWeight: "bold", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", borderBottom: "1px solid #ddd" }}>
+          <DialogTitle>Add New Employee</DialogTitle>
+          <IconButton onClick={() => setOpen(false)} color="dark">
+            <CloseIcon sx={{ color: "white" }} />
+          </IconButton>
+
+        </div>
         <Formik
           initialValues={{
             name: "",
@@ -229,45 +251,82 @@ const Employee = () => {
         >
           {({ errors, touched }) => (
             <Form>
-              <DialogContent>
-                {[
-                  "name",
-                  "age",
-                  "status",
-                  "band",
-                  "gender",
-                  "location",
-                  "position",
-                  "tenure",
-                ].map((field) => (
-                  <Field
-                    key={field}
-                    as={TextField}
-                    fullWidth
-                    margin="dense"
-                    name={field}
-                    label={field.charAt(0).toUpperCase() + field.slice(1)}
-                    error={touched[field] && !!errors[field]}
-                    helperText={touched[field] && errors[field]}
-                  />
-                ))}
-              </DialogContent>
-              <DialogActions
-                sx={{
-                  "&:hover": {
-                    backgroundColor: "transparent",
-                    boxShadow: "none",
-                  },
-                }}
-              >
-                <Button onClick={() => setOpen(false)}>Cancel</Button>
-                <Button type="submit" color="primary" variant="contained">
-                  Add
-                </Button>
-              </DialogActions>
+              <div className="modal-body" style={{ padding: "16px" }}>
+                <DialogContent>
+                  {[
+                    "name",
+                    "age",
+                    "status",
+                    "band",
+                    "gender",
+                    "location",
+                    "position",
+                    "tenure",
+                  ].map((field) => (
+                    <Field
+                      key={field}
+                      as={TextField}
+                      fullWidth
+                      margin="dense"
+                      name={field}
+                      label={field.charAt(0).toUpperCase() + field.slice(1)}
+                      error={touched[field] && !!errors[field]}
+                      helperText={touched[field] && errors[field]}
+                    />
+                  ))}
+                </DialogContent>
+              </div>
+              <div className="modal-footer" style={{ display: "flex", justifyContent: "flex-end", padding: "16px", borderTop: "1px solid #ddd" }}>
+                <DialogActions
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "transparent",
+                      boxShadow: "none",
+                    },
+                  }}
+                >
+                  <Button type="submit" color="primary" variant="outlined">
+                    Add
+                  </Button>
+                  <Button color="error" variant="outlined" onClick={() => setOpen(false)}>Cancel</Button>
+
+                </DialogActions>
+              </div>
             </Form>
           )}
         </Formik>
+      </Dialog>
+
+      {/* Delete Activity */}
+      <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+        <div className="modal-header" style={{ background: "#1976D2", color: "white", fontWeight: "bold", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", borderBottom: "1px solid #ddd" }}>
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <IconButton onClick={() => setConfirmOpen(false)} color="dark">
+            <CloseIcon sx={{ color: "white" }} />
+          </IconButton>
+        </div>
+        <div className="modal-body" style={{ padding: "16px", fontFamily: "Poppins" }}>
+          <DialogContent >
+            Are you sure want to delete this activity?
+          </DialogContent>
+        </div>
+        <div className="modal-footer" style={{ display: "flex", justifyContent: "flex-end", padding: "16px", borderTop: "1px solid #ddd" }}>
+          <DialogActions>
+            <Button onClick={() => setConfirmOpen(false)} color="primary" variant="outlined">
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                handleDelete(deleteId);
+                setConfirmOpen(false);
+              }}
+              color="error"
+              variant="outlined"
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </div>
       </Dialog>
     </div>
   );

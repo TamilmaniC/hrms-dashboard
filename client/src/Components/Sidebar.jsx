@@ -29,7 +29,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Link, Router, Routes, Route } from "react-router-dom";
 
-const Sidebar = ({ onToggle }) => {
+const Sidebar = ({ onToggle}) => {
   const [reportsOpen, setReportsOpen] = useState(false);
 
   const toggleReportsDropdown = () => {
