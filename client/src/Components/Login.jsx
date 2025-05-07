@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Axios from "axios";
+import api from "../api/auth";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -14,9 +14,10 @@ import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
+import { useGoogleLogin } from "@react-oauth/google";
 import "../App.css";
+import FormBg from "../asset/navy-bg.jpg";
+import GoogleLogo from "../asset/google-icon.webp";
 
 const Login = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState("");
@@ -26,11 +27,12 @@ const Login = ({ setIsAuthenticated }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    Axios.post("http://localhost:3000/auth/login", { email, password })
+    api
+      .post("/auth/login", { email, password })
       .then((response) => {
         if (response.data.status) {
           setIsAuthenticated(true);
-          localStorage.setItem("isLoggedIn", "true"); // ✅ Remember login
+          localStorage.setItem("isLoggedIn", "true");
           navigate("/dashpage");
         }
       })
@@ -39,29 +41,56 @@ const Login = ({ setIsAuthenticated }) => {
       });
   };
 
-  const handleGoogleSuccess = (credentialResponse) => {
-    const decoded = jwtDecode(credentialResponse.credential);
-    console.log("Google user:", decoded);
+  const handleGoogleSuccess = async (tokenResponse) => {
+    try {
+      const accessToken = tokenResponse.access_token;
 
-    Axios.post("http://localhost:3000/auth/google-login", {
-      email: decoded.email,
-      name: decoded.name,
-      picture: decoded.picture,
-    })
-      .then((res) => {
-        if (res.data.status) {
-          setIsAuthenticated(true);
-          localStorage.setItem("isLoggedIn", "true"); // ✅ Remember login
-          navigate("/dashpage");
-        }
-      })
-      .catch((err) => {
-        console.error("Google login error:", err);
+      // Fetch user info from Google API
+      const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
+
+      const profile = await res.json();
+      const { email, name, picture } = profile;
+
+      const backendRes = await api.post("/auth/google-login", {
+        email,
+        name,
+        picture,
+      });
+
+      if (backendRes.data.status) {
+        setIsAuthenticated(true);
+        localStorage.setItem("isLoggedIn", "true");
+        navigate("/dashpage");
+      }
+    } catch (error) {
+      console.error("Google login error:", error);
+    }
   };
 
+  const login = useGoogleLogin({
+    onSuccess: handleGoogleSuccess,
+    onError: () => console.log("Google login failed"),
+    flow: "implicit",
+  });
+
   return (
-    <Box className="sign-up-container">
+    <Box
+      sx={{
+        backgroundImage: `url(${FormBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      className="sign-up-container"
+    >
       <form
         className="sign-up-form"
         onSubmit={handleSubmit}
@@ -69,11 +98,22 @@ const Login = ({ setIsAuthenticated }) => {
           display: "flex",
           flexDirection: "column",
           gap: "15px",
-          width: "400px",
+          width: "380px",
+          borderRadius: "50px",
         }}
       >
-        <Typography variant="h5" align="center" sx={{ fontFamily: "Poppins" }}>
-          Login
+        <Typography
+          variant="h6"
+          align="center"
+          sx={{
+            color: "#192a56",
+            fontWeight: "normal",
+            fontFamily: "Poppins",
+            paddingTop: "12px",
+            paddingBottom: "20px",
+          }}
+        >
+          Login to continue
         </Typography>
 
         <TextField
@@ -81,7 +121,6 @@ const Login = ({ setIsAuthenticated }) => {
           placeholder="Email"
           autoComplete="off"
           required
-          fullWidth
           onChange={(e) => setEmail(e.target.value)}
           InputProps={{
             startAdornment: (
@@ -95,7 +134,7 @@ const Login = ({ setIsAuthenticated }) => {
                 />
               </InputAdornment>
             ),
-            sx: { paddingTop: "15px", height: "45px" },
+            sx: { paddingTop: "15px", height: "45px", borderRadius: "50px" },
           }}
         />
 
@@ -103,7 +142,6 @@ const Login = ({ setIsAuthenticated }) => {
           type={showPassword ? "text" : "password"}
           placeholder="Password"
           required
-          fullWidth
           onChange={(e) => setPassword(e.target.value)}
           InputProps={{
             startAdornment: (
@@ -132,13 +170,18 @@ const Login = ({ setIsAuthenticated }) => {
                 </IconButton>
               </InputAdornment>
             ),
-            sx: { paddingTop: "15px", height: "45px" },
+            sx: { paddingTop: "15px", height: "45px", borderRadius: "50px" },
           }}
         />
 
         <Link
           to="/forgotPassword"
-          style={{ textDecoration: "none", color: "#1976D2" }}
+          style={{
+            display: "flex",
+            justifyContent: "end",
+            textDecoration: "none",
+            color: "#1976D2",
+          }}
         >
           Forgot Password?
         </Link>
@@ -150,10 +193,24 @@ const Login = ({ setIsAuthenticated }) => {
         <Divider>or</Divider>
 
         <Box display="flex" justifyContent="center">
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={() => console.log("Google login failed")}
-          />
+          <Box
+            sx={{
+              borderRadius: "50%",
+              width: "45px",
+              height: "45px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            }}
+            onClick={login}
+          >
+            <img
+              src={GoogleLogo}
+              alt="Google sign-in"
+              style={{ width: "30px", height: "30px" }}
+            />
+          </Box>
         </Box>
 
         <Typography align="center" sx={{ fontFamily: "Poppins" }}>

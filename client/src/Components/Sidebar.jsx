@@ -62,7 +62,7 @@ const Sidebar = ({ onToggle}) => {
             variant="h5"
             sx={{
               fontFamily: "Poppins",
-              paddingTop: "25px",
+              paddingTop: "10px",
               paddingBottom: "25px",
               paddingLeft: "30px",
               fontWeight: "bold",
@@ -81,14 +81,14 @@ const Sidebar = ({ onToggle}) => {
                 <ListItemText primary="Dashpage" />
               </ListItemButton>
             </ListItem>
-            <ListItem disablePadding>
+            {/* <ListItem disablePadding>
               <ListItemButton component={Link} to="/create-user">
                 <ListItemIcon>
                   <PersonAddRoundedIcon />
                 </ListItemIcon>
                 <ListItemText primary="Users" />
               </ListItemButton>
-            </ListItem>
+            </ListItem> */}
             <ListItem disablePadding>
               <ListItemButton component={Link} to="/department">
                 <ListItemIcon>
@@ -176,7 +176,7 @@ const Sidebar = ({ onToggle}) => {
               </List>
             </Collapse>
 
-            <br />
+            {/* <br />
             <Divider width="200px" />
             <br />
             <ListItem disablePadding>
@@ -204,7 +204,7 @@ const Sidebar = ({ onToggle}) => {
                 </ListItemIcon>
                 <ListItemText primary="Authentication" />
               </ListItemButton>
-            </ListItem>
+            </ListItem> */}
           </List>
         </Box>
   );

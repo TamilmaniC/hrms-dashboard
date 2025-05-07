@@ -1,13 +1,4 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  List,
-  ListItem,
-  ListItemIcon,
-} from "@mui/material";
+import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
 import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
 import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined";
 import ExposureOutlinedIcon from "@mui/icons-material/ExposureOutlined";
@@ -28,26 +19,34 @@ const Dashpage = () => {
     {
       title: "Employee",
       icon: <PeopleOutlineOutlinedIcon fontSize="large" />,
+      value: "07",
+      subtitle: "Absences",
       path: "/employee",
-      color: "#74b9ff",
+      color: { start: "#2980b9", end: "#3498db" },
     },
     {
       title: "Payroll",
       icon: <PaymentOutlinedIcon fontSize="large" />,
+      value: "$12,000",
+      subtitle: "This Month",
       path: "/payroll",
-      color: "#55efc4",
+      color: { start: "#16a085", end: "#1abc9c" },
     },
     {
       title: "Accounts",
       icon: <ExposureOutlinedIcon fontSize="large" />,
+      value: "$42,562",
+      subtitle: "This Month",
       path: "/accounts",
-      color: "#f1c40f",
+      color: { start: "#ff9f43", end: "#feca57" },
     },
     {
       title: "Report",
       icon: <DataUsageOutlinedIcon fontSize="large" />,
+      value: "52",
+      subtitle: "Activities Logged",
       path: "/reports",
-      color: "#ff7675",
+      color: { start: "#eb4d4b", end: "#ff7979" },
     },
   ];
 
@@ -102,27 +101,24 @@ const Dashpage = () => {
   }, []);
 
   return (
-    <Box display="flex" flexDirection="column" gap={2} px={8} py={12}>
+    <Box display="flex" flexDirection="column" gap={1} px={8} py={12}>
       <Typography variant="h5">Welcome Tamilmani!</Typography>
-      <Typography variant="body1">
+      <Typography variant="body1" sx={{ mb: 3 }}>
         Measure how fast you're growing Monthly Recurring Revenue. Learn More
       </Typography>
 
-      <Grid container spacing={38}>
-        {cards.map(({ title, icon, path, color }) => (
-          <Grid item key={title} xs={12} sm={6} md={2}>
+      <Grid container spacing={2}>
+        {cards.map(({ title, icon, path, color, subtitle, value }) => (
+          <Grid item key={title} xs={12} sm={6} md={3}>
             <Card
               onClick={() => navigate(path)}
               sx={{
-                height: "140px",
-                width: "250px",
-                borderRadius: 2,
-                boxShadow: 2,
+                height: 145,
+                borderRadius: 5,
+                boxShadow: 3,
                 p: 2,
-                mt: 3,
-                textAlign: "center",
                 cursor: "pointer",
-                backgroundColor: color,
+                backgroundImage: `linear-gradient(135deg, ${color.start}, ${color.end})`,
                 color: "#fff",
                 transition: "transform 0.2s",
                 "&:hover": {
@@ -130,15 +126,23 @@ const Dashpage = () => {
                 },
               }}
             >
-              <CardContent>
-                <List>
-                  <ListItem sx={{ justifyContent: "center" }}>
-                    <ListItemIcon sx={{ fontSize: 60, color: "#fff" }}>
-                      {icon}
-                    </ListItemIcon>
-                  </ListItem>
-                  <Typography variant="h6">{title}</Typography>
-                </List>
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  height: "100px",
+                }}
+              >
+                <Box>{icon}</Box>
+                <Typography variant="h6">{title}</Typography>
+                <Typography variant="h5" fontWeight="bold">
+                  {value}
+                </Typography>
+                <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                  {subtitle}
+                </Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -157,20 +161,20 @@ const Dashpage = () => {
           sx={{
             flex: 1,
             minWidth: "300px",
-            height: "500px", 
-            boxShadow: 3,
+            height: "500px",
+            boxShadow: 24,
             borderRadius: 3,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between", 
-            p: 2, 
+            justifyContent: "space-between",
+            p: 2,
           }}
         >
           <CardContent sx={{ flexGrow: 1 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h5" gutterBottom>
               Organization Payroll Details
             </Typography>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
+            <Typography variant="h6" gutterBottom>
               Diversification of Payroll
             </Typography>
             <Box
@@ -178,7 +182,7 @@ const Dashpage = () => {
               id="myChart"
               sx={{
                 width: "100%",
-                height: "420px",
+                height: "400px",
                 mt: 2,
               }}
             />
@@ -190,8 +194,8 @@ const Dashpage = () => {
             minWidth: "300px",
             maxWidth: "400px",
             background: "linear-gradient(135deg, #2196f3, #21cbf3)",
-            borderRadius: 2,
-            p: 2,
+            borderRadius: 5,
+            p: 1,
             boxShadow: 3,
           }}
         >

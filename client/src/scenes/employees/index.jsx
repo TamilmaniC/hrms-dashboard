@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
+import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import axios from "axios";
 import {
   Button,
   Dialog,
@@ -8,85 +8,113 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  IconButton,
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import Header from "../../components/Header";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import IconButton from "@mui/material/IconButton";
-const Employee = () => {
+import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
+
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+const Employees = () => {
   const [rowData, setRowData] = useState([]);
+  const [open, setOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [open, setOpen] = useState(false);
-  // Fetch employees from API
+  const [deleteId, setDeleteId] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
   const fetchEmployees = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/employees");
+      const response = await axios.get(
+        "http://localhost:3000/api/employees/all"
+      );
       setRowData(response.data);
     } catch (error) {
       console.error("Error fetching employees:", error);
     }
   };
+
   useEffect(() => {
     fetchEmployees();
   }, []);
-  // Handle Delete
+
   const handleDelete = async (id) => {
-    console.log("Deleting Employee ID:", id); // :white_tick: Check if correct ID is sent
     try {
-      await axios.delete(`http://localhost:3000/api/employees/${id}`);
-      fetchEmployees(); // Refresh table after deletion
+      await axios.delete(`http://localhost:3000/api/employees/delete/${id}`);
+      fetchEmployees();
     } catch (error) {
       console.error("Error deleting employee:", error);
     }
   };
-  // Handle Edit
+
   const handleEdit = (row) => {
     setSelectedRow(row);
     setShowEditModal(true);
   };
-  // Handle Save
+
   const handleSave = async () => {
-    console.log("Saving Employee Data:", selectedRow); // :white_tick: Check if values exist
+    console.log("Saving Employee Data:", selectedRow);
     if (!selectedRow || !selectedRow._id) return;
     try {
       await axios.put(
-        `http://localhost:3000/api/employees/${selectedRow._id}`,
+        `http://localhost:3000/api/employees/update/${selectedRow.empId}`,
         selectedRow
       );
-      fetchEmployees(); // Refresh table after update
+      fetchEmployees();
       setShowEditModal(false);
     } catch (error) {
       console.error("Error updating employee:", error);
     }
   };
-  // Handle Add Employee
+
   const addEmployee = async (values) => {
     try {
-      await axios.post("http://localhost:3000/api/employees/add", values);
-      fetchEmployees(); // Refresh table after adding
+      const payload = {
+        ...values,
+        age: parseInt(values.age),
+        empId: values.empId.toString(),
+      };
+  
+      await axios.post("http://localhost:3000/api/employees", payload);
+      await fetchEmployees(); // Full refresh from DB
       setOpen(false);
     } catch (error) {
       console.error("Error adding employee:", error);
     }
-  };
-  // Column Definitions
-  const columnDefs = [
-    { field: "empId", headerName: "Emp ID" },
-    { field: "name", headerName: "Name" },
-    { field: "age", headerName: "Age" },
-    { field: "gender", headerName: "Gender" },
-    { field: "dob", headerName: "Date of Birth" },
-    { field: "email", headerName: "Email ID" },
-    { field: "contact", headerName: "Contact Number" },
-    { field: "address", headerName: "Address" },
-    { field: "status", headerName: "Status" },
-    { field: "joiningDate", headerName: "Joining Date" },
-    { field: "role", headerName: "Role" },
-    { field: "tenure", headerName: "Tenure" },
-    { field: "band", headerName: "Band" },
+  };  
+
+  const [columnDefs] = useState([
+    { headerName: " Emp ID", field: "empId" },
+    { headerName: "Employee Name", field: "name" },
+    { headerName: "Age", field: "age" },
+    { headerName: "Gender", field: "gender" },
+    {
+      headerName: "Date of Birth",
+      field: "dob",
+      valueFormatter: (params) => {
+        if (!params.value) return "";
+        return new Date(params.value).toLocaleDateString();
+      },
+    },
+    { headerName: "Email ID", field: "email" },
+    { headerName: "Contact Number", field: "contact" },
+    { headerName: "Address", field: "address" },
+    { headerName: "Status", field: "status" },
+    {
+      headerName: "Joining Date",
+      field: "joining",
+      valueFormatter: (params) => {
+        if (!params.value) return "";
+        return new Date(params.value).toLocaleDateString();
+      },
+    },
+    { headerName: "Role", field: "role" },
+    { headerName: "Band", field: "band" },
     {
       headerName: "Actions",
       field: "actions",
@@ -100,7 +128,10 @@ const Employee = () => {
             <EditIcon />
           </IconButton>
           <IconButton
-            onClick={() => handleDelete(params.data._id)}
+            onClick={() => {
+              setDeleteId(params.data.empId);
+              setConfirmOpen(true);
+            }}
             color="primary"
             size="small"
           >
@@ -110,24 +141,23 @@ const Employee = () => {
       ),
       width: 120,
     },
-  ];
-  // Validation Schema
+  ]);
+
   const EmployeeSchema = Yup.object().shape({
-    empId: Yup.string().required("Required"),
-    name: Yup.string().required("Required"),
-    age: Yup.number().required("Required").positive().integer(),
-    gender: Yup.string().required("Required"),
-    dob: Yup.date().required("Required"),
-    email: Yup.string().email("Invalid email").required("Required"),
-    contact: Yup.string().required("Required"),
-    address: Yup.string().required("Required"),
-    status: Yup.string().required("Required"),
-    joiningDate: Yup.date().required("Required"),
-    role: Yup.string().required("Required"),
-    tenure: Yup.number().required("Required").positive().integer(),
-    band: Yup.string().required("Required"),
+    empId: Yup.string().required("ID is Required"),
+    name: Yup.string().required("Name is Required"),
+    age: Yup.number().required("Age is Required").positive().integer(),
+    gender: Yup.string().required("Gender is Required"),
+    dob: Yup.date().required("DOB is Required"),
+    email: Yup.string().email("Email is Invalid email").required("Required"),
+    contact: Yup.string().required("Contact is Required"),
+    address: Yup.string().required("Address is Required"),
+    status: Yup.string().required("Status is Required"),
+    joining: Yup.date().required("Joining Date is Required"),
+    role: Yup.string().required("Role is Required"),
+    band: Yup.string().required("Band is Required"),
   });
-  // AG Grid Default Settings
+
   const defaultColDef = useMemo(
     () => ({
       filter: "agTextColumnFilter",
@@ -135,6 +165,7 @@ const Employee = () => {
     }),
     []
   );
+
   return (
     <div
       style={{
@@ -145,15 +176,16 @@ const Employee = () => {
         marginLeft: "5%",
       }}
     >
-      <Header title="EMPLOYEE" subtitle="Org Employee Details" />
+      <Header title="EMPLOYEES" subtitle="Organisation Employee Details" />
       <Button
         variant="contained"
         color="primary"
         onClick={() => setOpen(true)}
         sx={{ mb: 2 }}
       >
-        Add Employee
+        Add Employees
       </Button>
+
       <AgGridReact
         rowData={rowData}
         columnDefs={columnDefs}
@@ -163,49 +195,31 @@ const Employee = () => {
         paginationPageSize={10}
         paginationPageSizeSelector={[10, 25, 50]}
       />
-      {/* Edit Employee Modal */}
-      <Dialog open={showEditModal} onClose={() => setShowEditModal(false)}>
-        <DialogTitle>Edit Employee</DialogTitle>
-        <DialogContent>
-          {selectedRow && (
-            <>
-              {Object.keys(selectedRow).map(
-                (key) =>
-                  key !== "_id" &&
-                  key !== "__v" && (
-                    <TextField
-                      key={key}
-                      label={key.charAt(0).toUpperCase() + key.slice(1)}
-                      fullWidth
-                      margin="dense"
-                      value={selectedRow[key] || ""}
-                      onChange={(e) =>
-                        setSelectedRow({
-                          ...selectedRow,
-                          [key]: e.target.value,
-                        })
-                      }
-                    />
-                  )
-              )}
-            </>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowEditModal(false)}>Cancel</Button>
-          <Button onClick={handleSave} color="primary">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* Add Employee Modal */}
+
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle>Add New Employee</DialogTitle>
+        <div
+          className="modal-header"
+          style={{
+            background: "#1976D2",
+            color: "white",
+            fontWeight: "bold",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "16px",
+            borderBottom: "1px solid #ddd",
+          }}
+        >
+          <DialogTitle> Add Employee</DialogTitle>
+          <IconButton onClick={() => setOpen(false)} color="dark">
+            <CloseIcon sx={{ color: "white" }} />
+          </IconButton>
+        </div>
         <Formik
           initialValues={{
             empId: "",
@@ -217,74 +231,236 @@ const Employee = () => {
             contact: "",
             address: "",
             status: "",
-            joiningDate: "",
+            joining: "",
             role: "",
-            tenure: "",
             band: "",
           }}
           validationSchema={EmployeeSchema}
-          onSubmit={(values, { resetForm }) => {
-            addEmployee(values);
+          onSubmit={async (values, { resetForm }) => {
+            await addEmployee(values);
             resetForm();
           }}
         >
           {({ errors, touched }) => (
             <Form>
-              <DialogContent>
-                {[
-                  "empId",
-                  "name",
-                  "age",
-                  "gender",
-                  "dob",
-                  "email",
-                  "contact",
-                  "address",
-                  "status",
-                  "joiningDate",
-                  "role",
-                  "tenure",
-                  "band",
-                ].map((field) => (
-                  <Field
-                    key={field}
-                    as={TextField}
-                    fullWidth
-                    margin="dense"
-                    name={field}
-                    label={field.charAt(0).toUpperCase() + field.slice(1)}
-                    error={touched[field] && !!errors[field]}
-                    helperText={touched[field] && errors[field]}
-                  />
-                ))}
-              </DialogContent>
-              <DialogActions
-                sx={{
-                  "&:hover": {
-                    backgroundColor: "transparent",
-                    boxShadow: "none",
-                  },
+              <div className="modal-body" style={{ padding: "16px" }}>
+                <DialogContent>
+                  {[
+                    "empId",
+                    "name",
+                    "age",
+                    "gender",
+                    "dob",
+                    "email",
+                    "contact",
+                    "address",
+                    "status",
+                    "joining",
+                    "role",
+                    "band",
+                  ].map((field) => (
+                    <Field
+                      key={field}
+                      as={TextField}
+                      name={field}
+                      label={field.charAt(0).toUpperCase() + field.slice(1)}
+                      error={touched[field] && !!errors[field]}
+                      helperText={touched[field] && errors[field]}
+                      fullWidth
+                      margin="dense"
+                      type={
+                        ["dob", "joining"].includes(field) ? "date" : "text"
+                      }
+                      InputLabelProps={
+                        ["dob", "joining"].includes(field)
+                          ? { shrink: true }
+                          : {}
+                      }
+                    />
+                  ))}
+                </DialogContent>
+              </div>
+              <div
+                className="modal-footer"
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  padding: "16px",
+                  borderTop: "1px solid #ddd",
                 }}
               >
-                <Button onClick={() => setOpen(false)}>Cancel</Button>
-                <Button type="submit" color="primary" variant="contained">
-                  Add
-                </Button>
-              </DialogActions>
+                <DialogActions
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "transparent",
+                      boxShadow: "none",
+                    },
+                  }}
+                >
+                  <Button type="submit" variant="outlined" color="primary">
+                    Add Employee
+                  </Button>
+                  <Button
+                    color="error"
+                    variant="outlined"
+                    onClick={() => setOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                </DialogActions>
+              </div>
             </Form>
           )}
         </Formik>
       </Dialog>
+
+      {/* Edit Activity*/}
+      <Dialog
+        open={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        fullWidth
+        maxWidth="sm"
+      >
+        <div
+          className="modal-header"
+          style={{
+            background: "#1976D2",
+            color: "white",
+            fontWeight: "bold",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "16px",
+            borderBottom: "1px solid #ddd",
+          }}
+        >
+          <DialogTitle>Edit Employee</DialogTitle>
+          <IconButton onClick={() => setShowEditModal(false)} color="dark">
+            <CloseIcon sx={{ color: "white" }} />
+          </IconButton>
+        </div>
+
+        <div className="modal-body" style={{ padding: "16px" }}>
+          <DialogContent>
+            {selectedRow && (
+              <>
+                {Object.keys(selectedRow).map(
+                  (key) =>
+                    key !== "_id" &&
+                    key !== "__v" && (
+                      <TextField
+                        key={key}
+                        label={key.charAt(0).toUpperCase() + key.slice(1)}
+                        fullWidth
+                        margin="dense"
+                        type={key === "date" ? "date" : "text"}
+                        value={
+                          key === "date"
+                            ? new Date(selectedRow[key])
+                                .toISOString()
+                                .split("T")[0]
+                            : selectedRow[key] || ""
+                        }
+                        InputLabelProps={key === "date" ? { shrink: true } : {}}
+                        onChange={(e) =>
+                          setSelectedRow({
+                            ...selectedRow,
+                            [key]: e.target.value,
+                          })
+                        }
+                      />
+                    )
+                )}
+              </>
+            )}
+          </DialogContent>
+        </div>
+
+        <div
+          className="modal-footer"
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            padding: "16px",
+            borderTop: "1px solid #ddd",
+          }}
+        >
+          <DialogActions>
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={() => setShowEditModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleSave} color="primary" variant="outlined">
+              Save
+            </Button>
+          </DialogActions>
+        </div>
+      </Dialog>
+
+      {/* Delete Activity */}
+
+      <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+        <div
+          className="modal-header"
+          style={{
+            background: "#1976D2",
+            color: "white",
+            fontWeight: "bold",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "16px",
+            borderBottom: "1px solid #ddd",
+          }}
+        >
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <IconButton onClick={() => setConfirmOpen(false)} color="dark">
+            <CloseIcon sx={{ color: "white" }} />
+          </IconButton>
+        </div>
+        <div
+          className="modal-body"
+          style={{ padding: "16px", fontFamily: "Poppins" }}
+        >
+          <DialogContent>
+            Are you sure want to delete this employee?
+          </DialogContent>
+        </div>
+        <div
+          className="modal-footer"
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            padding: "16px",
+            borderTop: "1px solid #ddd",
+          }}
+        >
+          <DialogActions>
+            <Button
+              onClick={() => setConfirmOpen(false)}
+              color="primary"
+              variant="outlined"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                handleDelete(deleteId);
+                setConfirmOpen(false);
+              }}
+              color="error"
+              variant="outlined"
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </div>
+      </Dialog>
     </div>
   );
 };
-export default Employee;
 
-
-
-
-
-
-
-
-
+export default Employees;

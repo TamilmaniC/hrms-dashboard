@@ -1,57 +1,73 @@
-import React, { useMemo, useState, useEffect } from "react";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
-import { AgGridReact } from "ag-grid-react";
 import Header from "../../components/Header";
-import hrmsData from "../../data/hrmsData.json";
+import { Card, CardContent, Grid, Typography } from "@mui/material";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const Activities = () => {
-  const [rowData, setRowData] = useState([]);
-  useEffect(() => {
-    setRowData(hrmsData.holidays);
-  }, []);
+const cards = [
+  {
+    title: "01-01-2025",
+    value: "New Year",
+    subtitle: "Wednesday",
+  },
+  {
+    title: "14-01-2025",
+    value: "Pongal",
+    subtitle: "Tuesday",
+  },
+];
 
-  const [columnDefs] = useState([
-    { field: "id" },
-    { field: "name" },
-    { field: "date" },
-    { field: "day" },
-    { field: "type" },
-    { field: "location" },
-    { field: "year" },
-    { field: "status" },
-    { field: "description" },
-  ]);
-
-  const defaultColDef = useMemo(() => {
-    return {
-      filter: "agTextColumnFilter",
-      floatingFilter: true,
-    };
-  }, []);
-
+const Holidays = () => {
   return (
     <div
       style={{
         height: 500,
         marginRight: "60px",
-        paddingTop: "90px", 
+        paddingTop: "90px",
         marginLeft: "5%",
       }}
     >
-      <Header title="HOLIDAYS" subtitle="Org Holidays Details" />
+      <Header title="HOLIDAYS" subtitle="Organisation Holidays Details" />
 
-      <AgGridReact
-        rowData={rowData}
-        columnDefs={columnDefs}
-        defaultColDef={defaultColDef}
-        pagination={true}
-        paginationPageSize={10}
-        paginationPageSizeSelector={[10, 25, 50]}
-      />
+      <Grid container spacing={4}>
+        {cards.map(({ title, subtitle, value }) => (
+          <Grid item key={title} xs={12} sm={6} md={3}>
+            <Card
+              sx={{
+                height: 140,
+                borderRadius: 2,
+                boxShadow: 3,
+                p: 2,
+                cursor: "pointer",
+                transition: "transform 0.2s",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                },
+              }}
+            >
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  height: "100px",
+                }}
+              >
+                <Typography variant="h6">{title}</Typography>
+                <Typography variant="h5" fontWeight="bold">
+                  {value}
+                </Typography>
+                <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                  {subtitle}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
     </div>
   );
 };
 
-export default Activities;
+export default Holidays;

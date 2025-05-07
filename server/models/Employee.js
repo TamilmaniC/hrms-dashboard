@@ -1,23 +1,57 @@
-import mongoose from 'mongoose';
+import { DataTypes } from "sequelize";
+import { sequelize } from "../config/db.js";
 
-const EmployeeSchema = new mongoose.Schema(
-  {
-    empId: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
-    age: { type: Number, required: true },
-    gender: { type: String, required: true },
-    dob: { type: Date, required: true },
-    email: { type: String, required: true },
-    contact: { type: String, required: true },
-    address: { type: String, required: true },
-    status: { type: String, required: true },
-    joining: { type: Date, required: true },
-    role: { type: String, required: true },
-    tenure: { type: Number, required: true },
-    band: { type: String, required: true },
+export const Employee = sequelize.define("Employee", {
+  empId: {
+    type: DataTypes.STRING,
+    primaryKey: true,
   },
-  { timestamps: true }
-);
-
-const Employee = mongoose.model('Employee', EmployeeSchema);
-export default Employee;
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  age: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  gender: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  dob: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false,
+  },
+  contact: {
+    type: DataTypes.STRING, 
+    allowNull: false,
+  },
+  address: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  status: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  joining: {
+    type: DataTypes.DATE, 
+    allowNull: false,
+  },
+  role: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  band: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+}, {
+  tableName: "employees",
+  timestamps: false
+});
