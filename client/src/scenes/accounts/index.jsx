@@ -34,8 +34,8 @@ const Account = () => {
       style={{
         height: 500,
         marginRight: "60px",
-        paddingTop: "90px", 
-        marginLeft: "5%",
+        paddingTop: "60px",
+        marginLeft: "30px",
       }}
     >
       <Header title="ACCOUNTS" subtitle="Org - Financial Transactions" />

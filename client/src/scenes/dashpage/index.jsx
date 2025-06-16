@@ -1,14 +1,16 @@
 import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
-import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
+import BusinessRoundedIcon from "@mui/icons-material/BusinessRounded";
 import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined";
 import ExposureOutlinedIcon from "@mui/icons-material/ExposureOutlined";
 import DataUsageOutlinedIcon from "@mui/icons-material/DataUsageOutlined";
+import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../../App.css";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AgCharts } from "ag-charts-community";
+import { border } from "@mui/system";
 
 const Dashpage = () => {
   const [value, setValue] = useState(new Date());
@@ -17,12 +19,11 @@ const Dashpage = () => {
 
   const cards = [
     {
-      title: "Employee",
-      icon: <PeopleOutlineOutlinedIcon fontSize="large" />,
-      value: "07",
-      subtitle: "Absences",
-      path: "/employee",
-      color: { start: "#2980b9", end: "#3498db" },
+      title: "Department",
+      icon: <BusinessRoundedIcon fontSize="large" />,
+      value: "20",
+      subtitle: "Totally",
+      path: "/department",
     },
     {
       title: "Payroll",
@@ -30,7 +31,6 @@ const Dashpage = () => {
       value: "$12,000",
       subtitle: "This Month",
       path: "/payroll",
-      color: { start: "#16a085", end: "#1abc9c" },
     },
     {
       title: "Accounts",
@@ -38,7 +38,6 @@ const Dashpage = () => {
       value: "$42,562",
       subtitle: "This Month",
       path: "/accounts",
-      color: { start: "#ff9f43", end: "#feca57" },
     },
     {
       title: "Report",
@@ -46,16 +45,13 @@ const Dashpage = () => {
       value: "52",
       subtitle: "Activities Logged",
       path: "/reports",
-      color: { start: "#eb4d4b", end: "#ff7979" },
     },
   ];
 
   function getData() {
     return [
-      { country: "Payroll", population: 50000 },
-      { country: "Department", population: 2000 },
-      { country: "Gross Salary", population: 30000 },
-      { country: "Total Employes", population: 2500 },
+      { label: "Payroll", value: 50000 },
+      { label: "Gross Salary", value: 17000 },
     ];
   }
 
@@ -78,16 +74,16 @@ const Dashpage = () => {
         {
           data,
           type: "pie",
-          calloutLabelKey: "country",
-          angleKey: "population",
+          calloutLabelKey: "label",
+          angleKey: "value",
+          fills: ["#34495e", "#94B4C1"],
           sectorLabel: {
-            formatter: ({ datum }) =>
-              usdShortFormatter.format(datum.population),
+            formatter: ({ datum }) => usdShortFormatter.format(datum.value),
           },
           tooltip: {
             renderer: ({ datum }) => ({
-              title: datum.country,
-              content: `Value: ${usdShortFormatter.format(datum.population)}`,
+              title: datum.label,
+              content: `Value: ${usdShortFormatter.format(datum.value)}`,
             }),
           },
         },
@@ -101,31 +97,25 @@ const Dashpage = () => {
   }, []);
 
   return (
-    <Box display="flex" flexDirection="column" gap={1} px={8} py={12}>
-      <Typography variant="h5">Welcome Tamilmani!</Typography>
-      <Typography variant="body1" sx={{ mb: 3 }}>
-        Measure how fast you're growing Monthly Recurring Revenue. Learn More
-      </Typography>
-
+    <Box display="flex" flexDirection="column" gap={1} px={4} paddingTop={8}>
       <Grid container spacing={2}>
-        {cards.map(({ title, icon, path, color, subtitle, value }) => (
+        {cards.map(({ title, icon, path, subtitle, value }) => (
           <Grid item key={title} xs={12} sm={6} md={3}>
             <Card
               onClick={() => navigate(path)}
               sx={{
                 height: 145,
-                borderRadius: 5,
-                boxShadow: 3,
+                borderRadius: 3,
                 p: 2,
                 cursor: "pointer",
-                backgroundImage: `linear-gradient(135deg, ${color.start}, ${color.end})`,
-                color: "#fff",
+                color: "#34495e",
                 transition: "transform 0.2s",
                 "&:hover": {
                   transform: "scale(1.05)",
                 },
               }}
             >
+
               <CardContent
                 sx={{
                   display: "flex",
@@ -152,55 +142,74 @@ const Dashpage = () => {
       <Box
         display="flex"
         justifyContent="space-between"
-        alignItems="flex-start"
-        mt={8}
-        gap={5}
-        flexWrap="wrap"
+        alignItems="stretch"
+        gap={2}
+        my={3}
+        sx={{
+          flexWrap: "nowrap",
+        }}
       >
         <Card
           sx={{
-            flex: 1,
-            minWidth: "300px",
-            height: "500px",
-            boxShadow: 24,
-            borderRadius: 3,
+            flex: "1 1 20%",
+            minWidth: "200px",
+            height: "304px",
+            borderRadius: 1,
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            p: 2,
+            p: 1,
           }}
         >
-          <CardContent sx={{ flexGrow: 1 }}>
-            <Typography variant="h5" gutterBottom>
-              Organization Payroll Details
-            </Typography>
-            <Typography variant="h6" gutterBottom>
-              Diversification of Payroll
-            </Typography>
+          <CardContent sx={{ color: "#34495e" }}>
+            <Typography variant="h6">No. of Employees</Typography>
+            <Box sx={{ paddingTop: "30px", marginLeft: "15px" }}>
+              <PeopleAltRoundedIcon fontSize="large" />
+              <Typography variant="h6">3K</Typography>
+              <Typography variant="h6">Total Employees</Typography>
+            </Box>
+          </CardContent>
+        </Card>
+        <Card
+          sx={{
+            flex: "2 1 50%",
+            minWidth: "300px",
+            height: "304px",
+            borderRadius: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            p: 1,
+          }}
+        >
+          <CardContent sx={{ color: "#34495e" }}>
+            <Typography variant="h6">Payroll Details</Typography>
             <Box
               ref={chartRef}
               id="myChart"
               sx={{
-                width: "100%",
-                height: "400px",
-                mt: 2,
+                width: "95%",
+                height: "250px",
               }}
             />
           </CardContent>
         </Card>
 
-        <Box
+        <Card
           sx={{
+            flex: "1 1 25%",
             minWidth: "300px",
-            maxWidth: "400px",
-            background: "linear-gradient(135deg, #2196f3, #21cbf3)",
-            borderRadius: 5,
-            p: 1,
-            boxShadow: 3,
+            maxWidth: "350px",
+            height: "290px",
+            borderRadius: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            p: 2,
           }}
         >
-          <Calendar onChange={setValue} value={value} />
-        </Box>
+          <Calendar onChange={setValue} value={value}/>
+        </Card>
       </Box>
     </Box>
   );

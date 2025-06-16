@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db.js";
 
 export const Employee = sequelize.define("Employee", {
-  empId: {
+  empid: {
     type: DataTypes.STRING,
     primaryKey: true,
   },

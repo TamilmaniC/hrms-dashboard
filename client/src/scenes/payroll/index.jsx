@@ -43,32 +43,27 @@ const Payroll = () => {
   return (
     <Box
       sx={{
-        height: 320,
+        height: 280,
         marginRight: "60px",
-        paddingTop: "90px", 
-        marginLeft: "5%",
+        paddingTop: "60px",
+        marginLeft: "30px",
       }}
     >
       <Header title="PAYROLL" subtitle="Welcome to Org Payroll!" />
-      <Grid2
-        container
-        display= "flex"
-        justifyContent= "space-between"
-        mt="3px"
-      >
+      <Grid2 container display="flex" justifyContent="space-between" mt="3px">
         {cards.map(({ title, value }) => (
           <Grid2 xs={12} sm={6} md={2}>
             <Card
               sx={{
-                width: "250px",
-                height: "120px",
-                background: "#fff",
-                borderRadius: 3,
-                boxShadow: 3,
-                p: 2,
-                textAlign: "center",
-                mb: "30px", 
-              
+                flex: "1 1 20%",
+                minWidth: "230px",
+                height: "130px",
+                borderRadius: 2,
+                color: "#34495e",  
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                padding: 2,
               }}
             >
               <CardContent>
@@ -76,9 +71,7 @@ const Payroll = () => {
                   <Typography variant="h6" fontWeight="bold">
                     {title}
                   </Typography>
-                  <Typography variant="h6" fontWeight="">
-                    {value}
-                  </Typography>
+                  <Typography variant="h6">{value}</Typography>
                 </List>
               </CardContent>
             </Card>
@@ -86,14 +79,14 @@ const Payroll = () => {
         ))}
       </Grid2>
 
-      <AgGridReact
+      {/* <AgGridReact
         rowData={rowData}
         columnDefs={columnDefs}
         defaultColDef={defaultColDef}
         pagination={true}
         paginationPageSize={10}
         paginationPageSizeSelector={[10, 25, 50]}
-      />
+      /> */}
     </Box>
   );
 };

@@ -8,13 +8,11 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  IconButton
+  IconButton,
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import Header from "../../components/Header";
-import hrmsData from "../../data/hrmsData.json";
-import { duration } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
@@ -30,12 +28,12 @@ const Activities = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-
-
   const fetchActivities = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/activities");
-      setRowData(response.data);
+      const response = await axios.get(
+        "http://localhost:3000/api/activities/all"
+      );
+      setRowData(response.data.data);
     } catch (error) {
       console.error("Error fetching activities:", error);
     }
@@ -45,15 +43,14 @@ const Activities = () => {
     fetchActivities();
   }, []);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (actid) => {
     try {
-      await axios.delete(`http://localhost:3000/api/activities/${id}`);
-      fetchActivities(); // refresh table
+      await axios.delete(`http://localhost:3000/api/activities/${actid}`);
+      fetchActivities();
     } catch (error) {
       console.error("Error deleting activity:", error);
     }
   };
-
 
   const handleEdit = (row) => {
     setSelectedRow(row);
@@ -62,20 +59,28 @@ const Activities = () => {
 
   const handleSave = async () => {
     console.log("Saving Activity Data:", selectedRow);
-    if (!selectedRow || !selectedRow._id) return;
+    if (!selectedRow || !selectedRow.actid) return;
     try {
-      await axios.put(`http://localhost:3000/api/activities/${selectedRow._id}`, selectedRow);
-      fetchActivities(); // Refresh table after update
+      await axios.put(
+        `http://localhost:3000/api/activities/update/${selectedRow.actid}`,
+        selectedRow
+      );
+      fetchActivities();
       setShowEditModal(false);
     } catch (error) {
       console.error("Error updating activity:", error);
     }
   };
 
-
   const addActivity = async (values) => {
     try {
-      await axios.post("http://localhost:3000/api/activities/add", values);
+      const payload = {
+        ...values,
+        actid: values.actid,
+      };
+
+      console.log("Payload:", payload);
+      await axios.post("http://localhost:3000/api/activities", payload);
       setOpen(false);
       fetchActivities();
     } catch (error) {
@@ -84,15 +89,16 @@ const Activities = () => {
   };
 
   const [columnDefs] = useState([
-    { headerName: "ID", field: "id" },
+    { headerName: "Act ID", field: "actid" },
     { headerName: "Employee Name", field: "employeeName" },
     { headerName: "Type", field: "type" },
     {
-      headerName: "Date", field: "date",
+      headerName: "Date",
+      field: "date",
       valueFormatter: (params) => {
         if (!params.value) return "";
         return new Date(params.value).toLocaleDateString();
-      }
+      },
     },
     { headerName: "Duration", field: "duration" },
     { headerName: "Department", field: "department" },
@@ -119,7 +125,6 @@ const Activities = () => {
           >
             <DeleteIcon />
           </IconButton>
-
         </div>
       ),
       width: 120,
@@ -127,7 +132,7 @@ const Activities = () => {
   ]);
 
   const ActivitySchema = Yup.object().shape({
-    id: Yup.string().required("ID is required"),
+    actid: Yup.string().required("ID is required"),
     employeeName: Yup.string().required("Employee Name is required"),
     type: Yup.string().required("Type is required"),
     date: Yup.date().required("Date is required"),
@@ -150,8 +155,8 @@ const Activities = () => {
         height: 450,
         marginRight: "60px",
         paddingBottom: "35px",
-        paddingTop: "90px",
-        marginLeft: "5%",
+        paddingTop: "60px",
+        marginLeft: "30px",
       }}
     >
       <Header title="ACTIVITIES" subtitle="Employee Activity Tracking" />
@@ -181,7 +186,19 @@ const Activities = () => {
         fullWidth
         maxWidth="sm"
       >
-        <div className="modal-header" style={{ background: "#1976D2", color: "white", fontWeight: "bold", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", borderBottom: "1px solid #ddd" }}>
+        <div
+          className="modal-header"
+          style={{
+            background: "#1976D2",
+            color: "white",
+            fontWeight: "bold",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "16px",
+            borderBottom: "1px solid #ddd",
+          }}
+        >
           <DialogTitle> Add Activity</DialogTitle>
           <IconButton onClick={() => setOpen(false)} color="dark">
             <CloseIcon sx={{ color: "white" }} />
@@ -189,7 +206,7 @@ const Activities = () => {
         </div>
         <Formik
           initialValues={{
-            id: "",
+            actid: "",
             employeeName: "",
             type: "",
             date: "",
@@ -209,7 +226,7 @@ const Activities = () => {
               <div className="modal-body" style={{ padding: "16px" }}>
                 <DialogContent>
                   {[
-                    "id",
+                    "actid",
                     "employeeName",
                     "type",
                     "date",
@@ -226,13 +243,21 @@ const Activities = () => {
                       helperText={touched[field] && errors[field]}
                       fullWidth
                       margin="dense"
-                      type={field === "date" ? "date" : "text"}   // 👈 handle date input properly
+                      type={field === "date" ? "date" : "text"}
                       InputLabelProps={field === "date" ? { shrink: true } : {}}
                     />
                   ))}
                 </DialogContent>
               </div>
-              <div className="modal-footer" style={{ display: "flex", justifyContent: "flex-end", padding: "16px", borderTop: "1px solid #ddd" }}>
+              <div
+                className="modal-footer"
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  padding: "16px",
+                  borderTop: "1px solid #ddd",
+                }}
+              >
                 <DialogActions
                   sx={{
                     "&:hover": {
@@ -244,8 +269,13 @@ const Activities = () => {
                   <Button type="submit" variant="outlined" color="primary">
                     Add Activity
                   </Button>
-                  <Button color="error" variant="outlined" onClick={() => setOpen(false)}>Cancel</Button>
-
+                  <Button
+                    color="error"
+                    variant="outlined"
+                    onClick={() => setOpen(false)}
+                  >
+                    Cancel
+                  </Button>
                 </DialogActions>
               </div>
             </Form>
@@ -260,7 +290,19 @@ const Activities = () => {
         fullWidth
         maxWidth="sm"
       >
-        <div className="modal-header" style={{ background: "#1976D2", color: "white", fontWeight: "bold", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", borderBottom: "1px solid #ddd" }}>
+        <div
+          className="modal-header"
+          style={{
+            background: "#1976D2",
+            color: "white",
+            fontWeight: "bold",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "16px",
+            borderBottom: "1px solid #ddd",
+          }}
+        >
           <DialogTitle>Edit Activity</DialogTitle>
           <IconButton onClick={() => setShowEditModal(false)} color="dark">
             <CloseIcon sx={{ color: "white" }} />
@@ -276,25 +318,26 @@ const Activities = () => {
                     key !== "_id" &&
                     key !== "__v" && (
                       <TextField
-                      key={key}
-                      label={key.charAt(0).toUpperCase() + key.slice(1)}
-                      fullWidth
-                      margin="dense"
-                      type={key === "date" ? "date" : "text"}
-                      value={
-                        key === "date"
-                          ? new Date(selectedRow[key]).toISOString().split("T")[0]
-                          : selectedRow[key] || ""
-                      }
-                      InputLabelProps={key === "date" ? { shrink: true } : {}}
-                      onChange={(e) =>
-                        setSelectedRow({
-                          ...selectedRow,
-                          [key]: e.target.value,
-                        })
-                      }
-                    />
-                    
+                        key={key}
+                        label={key.charAt(0).toUpperCase() + key.slice(1)}
+                        fullWidth
+                        margin="dense"
+                        type={key === "date" ? "date" : "text"}
+                        value={
+                          key === "date"
+                            ? new Date(selectedRow[key])
+                                .toISOString()
+                                .split("T")[0]
+                            : selectedRow[key] || ""
+                        }
+                        InputLabelProps={key === "date" ? { shrink: true } : {}}
+                        onChange={(e) =>
+                          setSelectedRow({
+                            ...selectedRow,
+                            [key]: e.target.value,
+                          })
+                        }
+                      />
                     )
                 )}
               </>
@@ -302,9 +345,23 @@ const Activities = () => {
           </DialogContent>
         </div>
 
-        <div className="modal-footer" style={{ display: "flex", justifyContent: "flex-end", padding: "16px", borderTop: "1px solid #ddd" }}>
+        <div
+          className="modal-footer"
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            padding: "16px",
+            borderTop: "1px solid #ddd",
+          }}
+        >
           <DialogActions>
-            <Button color="error" variant="outlined" onClick={() => setShowEditModal(false)}>Cancel</Button>
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={() => setShowEditModal(false)}
+            >
+              Cancel
+            </Button>
             <Button onClick={handleSave} color="primary" variant="outlined">
               Save
             </Button>
@@ -315,20 +372,47 @@ const Activities = () => {
       {/* Delete Activity */}
 
       <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
-        <div className="modal-header" style={{ background: "#1976D2", color: "white", fontWeight: "bold", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", borderBottom: "1px solid #ddd" }}>
+        <div
+          className="modal-header"
+          style={{
+            background: "#1976D2",
+            color: "white",
+            fontWeight: "bold",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "16px",
+            borderBottom: "1px solid #ddd",
+          }}
+        >
           <DialogTitle>Confirm Deletion</DialogTitle>
           <IconButton onClick={() => setConfirmOpen(false)} color="dark">
             <CloseIcon sx={{ color: "white" }} />
           </IconButton>
         </div>
-        <div className="modal-body" style={{ padding: "16px", fontFamily: "Poppins" }}>
-          <DialogContent >
+        <div
+          className="modal-body"
+          style={{ padding: "16px", fontFamily: "Poppins" }}
+        >
+          <DialogContent>
             Are you sure want to delete this activity?
           </DialogContent>
         </div>
-        <div className="modal-footer" style={{ display: "flex", justifyContent: "flex-end", padding: "16px", borderTop: "1px solid #ddd" }}>
+        <div
+          className="modal-footer"
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            padding: "16px",
+            borderTop: "1px solid #ddd",
+          }}
+        >
           <DialogActions>
-            <Button onClick={() => setConfirmOpen(false)} color="primary" variant="outlined">
+            <Button
+              onClick={() => setConfirmOpen(false)}
+              color="primary"
+              variant="outlined"
+            >
               Cancel
             </Button>
             <Button
@@ -344,7 +428,6 @@ const Activities = () => {
           </DialogActions>
         </div>
       </Dialog>
-
     </div>
   );
 };

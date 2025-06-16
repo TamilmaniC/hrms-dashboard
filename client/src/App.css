@@ -3,9 +3,9 @@
   padding: 0;
 }
 
-/* body {
-  overflow: hidden; 
-} */
+html {
+  background-color: #94b4c1;
+}
 
 .sign-up-container {
   font-family: "Poppins", sans-serif;
@@ -51,20 +51,19 @@
 }
 
 .calendar-wrapper {
-  background: linear-gradient(135deg, #2196f3, #21cbf3); 
   padding: 5px;
   border-radius: 25px;
   display: inline-block;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .react-calendar {
-  background: white;
   border: none;
-  font-family: "Poppins", sans-serif !important;
-  width: 100%;
-  padding: 20px;
-  border-radius: 20px;
+  border-radius: 12px;
+  background-color: #94b4c1;
+  font-family: "Poppins", sans-serif;
+  width: 320px;
+  max-width: 100%;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
 }
 
 .react-calendar * {
@@ -80,15 +79,30 @@
 
 .react-calendar__navigation button {
   background: none;
+  color: #34495e !important;
   font-size: 1.2rem;
   font-weight: bold;
 }
 
-.react-calendar__tile {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 80%;
-  padding: 10px 0;
-  font-weight: 500;
-  transition: background 0.3s ease;
+.react-calendar__navigation__label {
+  font-size: 1.2rem;
+  font-weight: bold;
+  white-space: nowrap;
 }
 
+.react-calendar__month-view__weekdays__weekday {
+  color: #34495e;
+  font-weight: bold;
+}
+
+.react-calendar__tile {
+  color: #34495e;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+.react-calendar__tile--active {
+  background-color: #34495e !important;
+  color: white !important;
+  border-radius: 50%;
+}

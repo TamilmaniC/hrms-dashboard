@@ -1,60 +1,32 @@
 import React from "react";
-import {
-  AppBar,
-  Box,
-  Toolbar,
-  IconButton,
-  Typography,
-  MenuItem,
-  Menu,
-} from "@mui/material";
-import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
-import { useNavigate } from "react-router-dom";
+import { AppBar, Box, Toolbar, IconButton, Typography } from "@mui/material";
 
-const Navbar = ({ setIsAuthenticated }) => {
+const Navbar = ({ isSidebarOpen }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    navigate("/login");
-  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
         position="fixed"
-        elevation="3"
-        sx={{ zIndex: 1201, backgroundColor: "9FB3DF"}}
+        elevation={-1}
+        sx={{
+          zIndex: 1201,
+          backgroundColor: "#fff",
+          width: isSidebarOpen ? "calc(100% - 265px)" : "calc(100% - 60px)",
+          marginLeft: isSidebarOpen ? "265px" : "60px",
+          transition: "margin-left 0.2s ease-in-out",
+        }}
       >
         <Toolbar>
           <Typography
-            variant="h6"
+            variant="h5"
             noWrap
             component="div"
-            sx={{ flexGrow: 1, fontFamily: "Poppins" }}
+            sx={{ flexGrow: 1, fontFamily: "Poppins", color: "#34495e"}}
           >
-            HR Dashboard
+            Welcome Tamilmani !
           </Typography>
-
-          <IconButton
-            size="large"
-            edge="end"
-            aria-haspopup="true"
-            color="inherit"
-            onClick={handleLogout}
-            sx={{
-              "&:hover": {
-                backgroundColor: "transparent",
-                boxShadow: "none",
-              },
-            }}
-          >
-            <LogoutRoundedIcon />
-            <Typography sx={{ fontFamily: "Poppins", m: "5px" }}>
-              Logout
-            </Typography>
-          </IconButton>
         </Toolbar>
       </AppBar>
     </Box>

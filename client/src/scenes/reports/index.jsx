@@ -71,8 +71,8 @@ const Reports = () => {
       sx={{
         height: 450,
         marginRight: "60px",
-        paddingTop: "90px", 
-        marginLeft: "5%",
+        paddingTop: "60px",
+        marginLeft: "30px",
       }}
     >
       <Header title="Reports" subtitle="Org Employee Reports" />

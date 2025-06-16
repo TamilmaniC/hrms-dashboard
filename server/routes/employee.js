@@ -3,9 +3,10 @@ import { Employee } from "../models/Employee.js";
 
 const router = express.Router();
 
-// Create Employee
 router.post("/", async (req, res) => {
   try {
+    console.log("Received Data:", req.body);
+
     const newEmployee = await Employee.create(req.body);
     return res.json({
       status: true,
@@ -13,14 +14,23 @@ router.post("/", async (req, res) => {
       data: newEmployee,
     });
   } catch (err) {
-    console.error("Error creating employee:", err);
-    return res
-      .status(500)
-      .json({ status: false, message: "Failed to add employee" });
+    console.error("Error creating employee:", err.message, err.stack);
+
+    if (err.name === "SequelizeUniqueConstraintError") {
+      return res.status(400).json({
+        status: false,
+        message: "Email ID already exists. Please use a different email.",
+      });
+    }
+
+    return res.status(500).json({
+      status: false,
+      message: "Failed to add employee",
+      error: err.message,
+    });
   }
 });
 
-// Get All Employees
 router.get("/all", async (req, res) => {
   try {
     const employees = await Employee.findAll();
@@ -33,7 +43,6 @@ router.get("/all", async (req, res) => {
   }
 });
 
-// Get Single Employee by ID
 router.get("/:empid", async (req, res) => {
   try {
     const employee = await Employee.findByPk(req.params.empid);
@@ -50,11 +59,10 @@ router.get("/:empid", async (req, res) => {
   }
 });
 
-// Update Employee
 router.put("/update/:empid", async (req, res) => {
   try {
     const [updated] = await Employee.update(req.body, {
-      where: { empId: req.params.empid },
+      where: { empid: req.params.empid },
     });
 
     if (!updated) {
@@ -64,7 +72,7 @@ router.put("/update/:empid", async (req, res) => {
     }
 
     const updatedEmployee = await Employee.findOne({
-      where: { empId: req.params.empid },
+      where: { empid: req.params.empid },
     });
 
     return res.json({
@@ -80,11 +88,10 @@ router.put("/update/:empid", async (req, res) => {
   }
 });
 
-// Delete Employee
 router.delete("/delete/:empid", async (req, res) => {
   try {
     const deleted = await Employee.destroy({
-      where: { empId: req.params.empid },
+      where: { empid: req.params.empid },
     });
     if (!deleted)
       return res

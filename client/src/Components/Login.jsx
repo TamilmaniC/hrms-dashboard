@@ -44,8 +44,6 @@ const Login = ({ setIsAuthenticated }) => {
   const handleGoogleSuccess = async (tokenResponse) => {
     try {
       const accessToken = tokenResponse.access_token;
-
-      // Fetch user info from Google API
       const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
         headers: {
           Authorization: `Bearer ${accessToken}`,

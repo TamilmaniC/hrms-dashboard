@@ -33,7 +33,7 @@ const Employees = () => {
       const response = await axios.get(
         "http://localhost:3000/api/employees/all"
       );
-      setRowData(response.data);
+      setRowData(response.data.data);
     } catch (error) {
       console.error("Error fetching employees:", error);
     }
@@ -43,9 +43,9 @@ const Employees = () => {
     fetchEmployees();
   }, []);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (empid) => {
     try {
-      await axios.delete(`http://localhost:3000/api/employees/delete/${id}`);
+      await axios.delete(`http://localhost:3000/api/employees/delete/${empid}`);
       fetchEmployees();
     } catch (error) {
       console.error("Error deleting employee:", error);
@@ -59,10 +59,10 @@ const Employees = () => {
 
   const handleSave = async () => {
     console.log("Saving Employee Data:", selectedRow);
-    if (!selectedRow || !selectedRow._id) return;
+    if (!selectedRow || !selectedRow.empid) return;
     try {
       await axios.put(
-        `http://localhost:3000/api/employees/update/${selectedRow.empId}`,
+        `http://localhost:3000/api/employees/update/${selectedRow.empid}`,
         selectedRow
       );
       fetchEmployees();
@@ -77,19 +77,20 @@ const Employees = () => {
       const payload = {
         ...values,
         age: parseInt(values.age),
-        empId: values.empId.toString(),
+        empid: values.empid,
       };
-  
+
+      console.log("Payload:", payload);
       await axios.post("http://localhost:3000/api/employees", payload);
-      await fetchEmployees(); // Full refresh from DB
+      await fetchEmployees();
       setOpen(false);
     } catch (error) {
       console.error("Error adding employee:", error);
     }
-  };  
+  };
 
   const [columnDefs] = useState([
-    { headerName: " Emp ID", field: "empId" },
+    { headerName: " Emp ID", field: "empid" },
     { headerName: "Employee Name", field: "name" },
     { headerName: "Age", field: "age" },
     { headerName: "Gender", field: "gender" },
@@ -129,7 +130,7 @@ const Employees = () => {
           </IconButton>
           <IconButton
             onClick={() => {
-              setDeleteId(params.data.empId);
+              setDeleteId(params.data.empid);
               setConfirmOpen(true);
             }}
             color="primary"
@@ -144,7 +145,7 @@ const Employees = () => {
   ]);
 
   const EmployeeSchema = Yup.object().shape({
-    empId: Yup.string().required("ID is Required"),
+    empid: Yup.string().required("ID is Required"),
     name: Yup.string().required("Name is Required"),
     age: Yup.number().required("Age is Required").positive().integer(),
     gender: Yup.string().required("Gender is Required"),
@@ -172,8 +173,8 @@ const Employees = () => {
         height: 450,
         marginRight: "60px",
         paddingBottom: "35px",
-        paddingTop: "90px",
-        marginLeft: "5%",
+        paddingTop: "60px",
+        marginLeft: "30px",
       }}
     >
       <Header title="EMPLOYEES" subtitle="Organisation Employee Details" />
@@ -222,7 +223,7 @@ const Employees = () => {
         </div>
         <Formik
           initialValues={{
-            empId: "",
+            empid: "",
             name: "",
             age: "",
             gender: "",
@@ -246,7 +247,7 @@ const Employees = () => {
               <div className="modal-body" style={{ padding: "16px" }}>
                 <DialogContent>
                   {[
-                    "empId",
+                    "empid",
                     "name",
                     "age",
                     "gender",

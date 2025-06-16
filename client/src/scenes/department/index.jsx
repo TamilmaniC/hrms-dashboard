@@ -9,6 +9,7 @@ import {
   DialogActions,
   TextField,
   IconButton,
+  Card,
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -30,8 +31,10 @@ const Department = () => {
 
   const fetchDepartments = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/departments");
-      setRowData(response.data);
+      const response = await axios.get(
+        "http://localhost:3000/api/departments/all"
+      );
+      setRowData(response.data.data);
     } catch (error) {
       console.error("Error fetching department:", error);
     }
@@ -41,10 +44,13 @@ const Department = () => {
     fetchDepartments();
   }, []);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (depid) => {
     try {
-      await axios.delete(`http://localhost:3000/api/departments/${id}`);
-      fetchDepartments(); 
+      console.log("Deleting department with ID:", depid); 
+      await axios.delete(
+        `http://localhost:3000/api/departments/delete/${depid}`
+      );
+      fetchDepartments();
     } catch (error) {
       console.error("Error deleting department:", error);
     }
@@ -57,13 +63,13 @@ const Department = () => {
 
   const handleSave = async () => {
     console.log("Saving Employee Data:", selectedRow);
-    if (!selectedRow || !selectedRow._id) return;
+    if (!selectedRow || !selectedRow.depid) return;
     try {
       await axios.put(
-        `http://localhost:3000/api/departments/${selectedRow._id}`,
+        `http://localhost:3000/api/departments/update/${selectedRow.depid}`,
         selectedRow
       );
-      fetchDepartments(); 
+      fetchDepartments();
       setShowEditModal(false);
     } catch (error) {
       console.error("Error updating department:", error);
@@ -72,17 +78,24 @@ const Department = () => {
 
   const addDepartment = async (values) => {
     try {
-      await axios.post("http://localhost:3000/api/departments/add", values);
+      const payload = {
+        ...values,
+        depid: values.depid.toString(),
+        code: values.code.toString(),
+      };
+
+      console.log("Payload:", payload);
+      await axios.post("http://localhost:3000/api/departments", payload);
+      await fetchDepartments();
       setOpen(false);
-      fetchDepartments();
     } catch (error) {
       console.error("Error adding department:", error);
     }
   };
 
   const [columnDefs] = useState([
-    { headerName: " Dep ID", field: "depId" },
-    { headerName: "Employee Name", field: "name" },
+    { headerName: " Dep ID", field: "depid" },
+    { headerName: "Department Name", field: "name" },
     { headerName: "Code", field: "code" },
     { headerName: "Description", field: "description" },
     { headerName: "Branch", field: "branch" },
@@ -90,7 +103,14 @@ const Department = () => {
     { headerName: "Reporting Manager", field: "reporting" },
     { headerName: "Total Employees", field: "total" },
     { headerName: "Budget Allocation", field: "budget" },
-    { headerName: "Created Date", field: "created" },
+    {
+      headerName: "Created Date",
+      field: "created",
+      valueFormatter: (params) => {
+        if (!params.value) return "";
+        return new Date(params.value).toLocaleDateString();
+      },
+    },
     { headerName: "Status", field: "status" },
     {
       headerName: "Actions",
@@ -106,7 +126,7 @@ const Department = () => {
           </IconButton>
           <IconButton
             onClick={() => {
-              setDeleteId(params.data._id);
+              setDeleteId(params.data.depid);
               setConfirmOpen(true);
             }}
             color="primary"
@@ -121,7 +141,7 @@ const Department = () => {
   ]);
 
   const DepartmentSchema = Yup.object().shape({
-    depId: Yup.string().required("Department ID is required"),
+    depid: Yup.string().required("Department ID is required"),
     name: Yup.string().required("Department name is required"),
     code: Yup.string().required("Code is required"),
     description: Yup.string().required("Description is required"),
@@ -148,8 +168,8 @@ const Department = () => {
         height: 450,
         marginRight: "60px",
         paddingBottom: "35px",
-        paddingTop: "90px",
-        marginLeft: "5%",
+        paddingTop: "60px",
+        marginLeft: "30px",
       }}
     >
       <Header title="DEPARTMENT" subtitle="Organisation Departments Details" />{" "}
@@ -196,7 +216,7 @@ const Department = () => {
         </div>
         <Formik
           initialValues={{
-            depId: "",
+            depid: "",
             name: "",
             code: "",
             description: "",
@@ -220,7 +240,7 @@ const Department = () => {
               <div className="modal-body" style={{ padding: "16px" }}>
                 <DialogContent>
                   {[
-                    "depId",
+                    "depid",
                     "name",
                     "code",
                     "description",
@@ -327,7 +347,7 @@ const Department = () => {
                         label={key.charAt(0).toUpperCase() + key.slice(1)}
                         fullWidth
                         margin="dense"
-                        type={key === "date" ? "date" : "text"}
+                        type={key === "created" ? "date" : "text"}
                         value={
                           key === "date"
                             ? new Date(selectedRow[key])
@@ -335,7 +355,9 @@ const Department = () => {
                                 .split("T")[0]
                             : selectedRow[key] || ""
                         }
-                        InputLabelProps={key === "date" ? { shrink: true } : {}}
+                        InputLabelProps={
+                          key === "craeted" ? { shrink: true } : {}
+                        }
                         onChange={(e) =>
                           setSelectedRow({
                             ...selectedRow,

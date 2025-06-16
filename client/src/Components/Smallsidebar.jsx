@@ -11,15 +11,15 @@ const Smallsidebar = ({ onToggle }) => {
         flexDirection: "column",
         justifyContent: "space-between",
         width: "60px",
-        backgroundColor: "#fff",
+        backgroundColor: "#34495e",
         zIndex: 1000,
         left: 0,
-        paddingTop: "70px",
+        paddingTop: "20px",
         boxShadow: "2px 0 5px rgba(0,0,0,0.1)",
       }}
     >
-      <IconButton onClick={onToggle} sx={{ alignSelf: "center", marginBottom: "10px" }}>
-        <MenuIcon />
+      <IconButton onClick={onToggle}>
+        <MenuIcon sx={{ color: "#fff" }}/>
       </IconButton>
     </Box>
   );

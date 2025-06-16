@@ -55,11 +55,9 @@ function App() {
     }
   }, []);
 
-  // ✅ Add this function
   const handleToggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
   };
-  
 
   return (
     <ThemeProvider theme={theme}>
@@ -93,17 +91,16 @@ function App() {
                   ) : (
                     <SmallSidebar onToggle={handleToggleSidebar} />
                   )}
-                  <Box
-                    flex={1}
-                    display="flex"
-                    flexDirection="column"
-                    sx={{
-                      marginLeft: isSidebarOpen ? "220px" : "60px",
-                      transition: "margin-left 0.3s ease-in-out",
-                    }}
-                  >
-                    <Navbar />
-                    <Box flex={1} p={2}>
+                  <Box flex={1} display="flex" flexDirection="column">
+                    <Navbar isSidebarOpen={isSidebarOpen} />
+                    <Box
+                      flex={1}
+                      p={5}
+                      sx={{
+                        marginLeft: isSidebarOpen ? "220px" : "60px",
+                        transition: "margin-left 0.2s ease-in-out",
+                      }}
+                    >
                       <Routes>
                         <Route path="/dashpage" element={<Dashpage />} />
                         <Route path="/create-user" element={<Users />} />
